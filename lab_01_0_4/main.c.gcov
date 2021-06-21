@@ -1,0 +1,23 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:3
+        -:    1:#include <stdio.h>
+        -:    2:
+        -:    3:#define EMPTY_BOTTLE_COST 20
+        -:    4:#define WATER_BOTTLE_COST 45
+        -:    5:
+        -:    6:#define OKAY 0
+        -:    7:
+        -:    8:
+        3:    9:int main(void)
+        -:   10:{
+        3:   11:    int s, num_bot = 0;
+        3:   12:    printf("Enter the amount of money: ");
+        3:   13:    scanf("%d", &s);
+        -:   14:
+        3:   15:    num_bot = (s - EMPTY_BOTTLE_COST) / (WATER_BOTTLE_COST - EMPTY_BOTTLE_COST);
+        -:   16:
+        3:   17:    printf("Max number of bottles: %d\n", num_bot);
+        3:   18:    return OKAY;
+        -:   19:}

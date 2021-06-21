@@ -1,0 +1,1 @@
+o neg_10_f.txt ./res/neg_10_out.txt

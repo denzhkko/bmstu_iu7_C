@@ -1,0 +1,41 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:9
+        -:    1:#include <stdio.h>
+        -:    2:
+        -:    3:#include "funcs.h"
+        -:    4:
+        -:    5:#define NOT_ENOUGH_NUM_MES "Not enough numbers\n"
+        -:    6:#define NO_ALPHA_AT_END_MES "No char at end\n"
+        -:    7:#define UNKNOWN_EXIT_CODE_MES "Unknown error\n"
+        -:    8:
+        -:    9:#define NOT_ENOUGH_NUM_ERROR 1
+        -:   10:#define NO_ALPHA_AT_END_ERROR 2
+        -:   11:#define UNKNOWN_EXIT_CODE_ERROR 3
+        -:   12:
+        9:   13:int process_exit_code(const int exit_code)
+        -:   14:{
+        9:   15:    switch (exit_code)
+        -:   16:    {
+        7:   17:        case OKAY:
+        7:   18:            return OKAY;
+        2:   19:        case NOT_ENOUGH_NUM:
+        2:   20:            printf(NOT_ENOUGH_NUM_MES);
+        2:   21:            return NOT_ENOUGH_NUM_ERROR;
+    #####:   22:        default:
+    #####:   23:            printf(UNKNOWN_EXIT_CODE_MES);
+    #####:   24:            return UNKNOWN_EXIT_CODE_ERROR;
+        -:   25:    }
+        -:   26:}
+        -:   27:
+        9:   28:int main(void)
+        -:   29:{
+        -:   30:    int max_len;
+        -:   31:    int rc;
+        -:   32:
+        9:   33:    if (OKAY == (rc = process(stdin, &max_len)))
+        7:   34:        printf("%d\n", max_len);
+        -:   35:
+        9:   36:    return process_exit_code(rc);
+        -:   37:}

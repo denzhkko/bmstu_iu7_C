@@ -1,0 +1,7 @@
+# Autocomplete && error checker
+
+.ccls-cache
+
+# Bash scripts
+
+!func_tests/*.sh

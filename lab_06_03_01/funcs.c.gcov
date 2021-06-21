@@ -1,0 +1,159 @@
+        -:    0:Source:../funcs.c
+        -:    0:Graph:./funcs.gcno
+        -:    0:Data:./funcs.gcda
+        -:    0:Runs:23
+        -:    1:#include "funcs.h"
+        -:    2:
+        -:    3:/**
+        -:    4: * @brief Read title num from file
+        -:    5: *
+        -:    6: * @return OKAY - no error;
+        -:    7: * INCORRECT_LINE - incorrect line;
+        -:    8: * INCORRECT_TITLE_NUM - number out of range;
+        -:    9: * EMPTY_FILE - empty file.
+        -:   10: */
+       19:   11:int get_title_num(FILE *const f, int *const title_num)
+        -:   12:{
+      19*:   13:    assert(NULL != f);
+        -:   14:
+        -:   15:    int num;
+       19:   16:    if (1 != fscanf(f, "%d", &num))
+        -:   17:    {
+        2:   18:        if (EOF == fgetc(f))
+        1:   19:            return EMPTY_FILE;
+        -:   20:        else
+        1:   21:            return NOT_FIRST_LINE_NUM;
+        -:   22:    }
+        -:   23:
+       17:   24:    if (num < 0)
+        1:   25:        return INCORRECT_TITLE_NUM;
+       16:   26:    else if (num > MAX_PRODUCT_COUNT)
+        1:   27:        return LINE_COUNT_EXCEEDED;
+        -:   28:
+        -:   29:    int c;
+       15:   30:    if ('\n' != (c = fgetc(f)) && EOF != c)
+        1:   31:        return INCORRECT_TITLE_NUM_ENTRY;
+        -:   32:
+       14:   33:    *title_num = num;
+       14:   34:    return OKAY;
+        -:   35:}
+        -:   36:
+        -:   37:/**
+        -:   38: * @brief Read line with product data from text file and put it in structure
+        -:   39: *
+        -:   40: * @return OKAY - no error;
+        -:   41: * PRODUCT_NAME_LENGTH_EXCEEDED - length of word exceed;
+        -:   42: * EMPTY_LINE - empty line;
+        -:   43: * INCORRECT_LINE - impossible to read product info from line.
+        -:   44: */
+       31:   45:int read_product_line(FILE *const f, s_product *const item)
+        -:   46:{
+      31*:   47:    assert(NULL != f);
+        -:   48:
+        -:   49:    int c;
+        -:   50:    s_product product;
+        -:   51:
+        -:   52:    // Read product name
+       31:   53:    c = fgetc(f);
+       31:   54:    if (EOF == c || '\n' == c)
+        8:   55:        return EMPTY_LINE;
+       23:   56:    product.name[0] = c;
+        -:   57:
+       23:   58:    for (int i = 1; ; ++i)
+        -:   59:    {
+      161:   60:        c = fgetc(f);
+        -:   61:
+      161:   62:        if (MAX_NAME_LENGTH  == i && '\n' != c)
+        1:   63:            return PRODUCT_NAME_LENGTH_EXCEEDED;
+      160:   64:        else if (EOF == c)
+        1:   65:            return UNEXPECTED_EOF;
+      159:   66:        else if ('\n' == c)
+        -:   67:        {
+       21:   68:            product.name[i] = '\0';
+       21:   69:            break;
+        -:   70:        }
+        -:   71:
+      138:   72:        product.name[i] = c;
+        -:   73:    }
+        -:   74:
+        -:   75:    // Read product price
+        -:   76:    int num;
+        -:   77:    
+       21:   78:    if (1 != fscanf(f, "%d", &num))
+        1:   79:        return INCORRECT_LINE;
+        -:   80:
+       20:   81:    if (num < 0)
+        1:   82:        return NEGATIVE_PRODUCT_PRICE;
+        -:   83:
+       19:   84:    if ('\n' != (c = fgetc(f)) && EOF != c)
+        1:   85:        return INCORRECT_PRODUCT_PRICE_ENTRY;
+        -:   86:
+       18:   87:    product.price = num;
+        -:   88:
+       18:   89:    *item = product;
+       18:   90:    return OKAY;
+        -:   91:}
+        -:   92:
+        -:   93:/**
+        -:   94: * @brief read struct from text file to array
+        -:   95: *
+        -:   96: * @return OKAY - no error;
+        -:   97: * INCORRECT_LINE - incorrect line in file;
+        -:   98: * INCORRECT_TITLE_NUM - number out of range;
+        -:   99: * PRODUCT_NAME_LENGTH_EXCEEDED - length of word exceed;
+        -:  100: * MORE_LINES_EXPECTED - more lines expected in file;
+        -:  101: * LESS_LINES_EXPECTED - less lines expected in file;
+        -:  102: * EMPTY_FILE - empty file.
+        -:  103: */
+       19:  104:int get_product_array(FILE *const f, s_product *const products,
+        -:  105:int *const products_len)
+        -:  106:{
+      19*:  107:    assert(NULL != f);
+      19*:  108:    assert(NULL != products);
+        -:  109:
+        -:  110:    int rc;
+        -:  111:
+       19:  112:    if (fseek(f, 0L, SEEK_SET))
+    #####:  113:        return FSEEK_FAILED;
+        -:  114:
+       19:  115:    if (OKAY != (rc = get_title_num(f, products_len)))
+        5:  116:        return rc;
+        -:  117:
+       31:  118:    for (int i = 0; i < *products_len; ++i)
+        -:  119:    {
+       23:  120:        rc = read_product_line(f, products + i);
+        -:  121:
+       23:  122:        if (EMPTY_LINE == rc)
+        1:  123:            return MORE_LINES_EXPECTED;
+       22:  124:        else if (OKAY != rc)
+        5:  125:            return rc;
+        -:  126:    }
+        -:  127:
+        -:  128:    s_product item;
+        8:  129:    if (EMPTY_LINE != (rc = read_product_line(f, &item)))
+        1:  130:        return LESS_LINES_EXPECTED;
+        -:  131:
+        7:  132:    return OKAY;
+        -:  133:}
+        -:  134:
+        7:  135:int print_required(const s_product *const products, const int product_count,
+        -:  136:const double entered_price)
+        -:  137:{
+       7*:  138:    assert(NULL != products);
+       7*:  139:    assert(product_count >= 0);
+        7:  140:    int is_printed = FALSE;
+        -:  141:
+       21:  142:    for (int i = 0; i < product_count; ++i)
+        -:  143:    {
+       14:  144:        if (products[i].price < entered_price)
+        -:  145:        {
+       10:  146:            printf("%s\n%d\n", products[i].name, products[i].price);
+       10:  147:            is_printed = TRUE;
+        -:  148:        }
+        -:  149:    }
+        -:  150:
+        7:  151:    if (FALSE == is_printed)
+        1:  152:        return TARGET_PRODUCT_NOT_EXIST;
+        -:  153:
+        6:  154:    return OKAY;
+        -:  155:}

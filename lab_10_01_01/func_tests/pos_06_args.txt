@@ -1,0 +1,1 @@
+pos_06_in.txt ./res/pos_06_out_f.txt ./res/pos_06_out_s.txt

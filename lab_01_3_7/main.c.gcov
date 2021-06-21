@@ -1,0 +1,90 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:7
+        -:    0:Source is newer than graph
+        -:    1:#include <stdio.h>
+        -:    2:#include <math.h>
+        -:    3:
+        -:    4:#define INPUT_VAR_NUM 2
+        -:    5:#define REAL_TOL 1e-7
+        -:    6:
+        -:    7:#define X_MAX_VALUE 1.0
+        -:    8:#define X_MIN_VALUE -1.0
+        -:    9:#define EPS_MAX_VALUE 1.0
+        -:   10:
+        -:   11:#define INCORRECT_X 4.0
+        -:   12:#define INCORRECT_EPS 8.0
+        -:   13:
+        -:   14:#define OKAY 0
+        -:   15:#define INPUT_ERROR 1
+        -:   16:#define INCORRECT_X_ERROR 4
+        -:   17:#define INCORRECT_EPS_ERROR 8
+        -:   18:
+        -:   19:
+        6:   20:double calc_s(double x, double eps)
+        -:   21:{
+        6:   22:    if (x > X_MAX_VALUE || x < X_MIN_VALUE)
+        1:   23:        return INCORRECT_X;
+        5:   24:
+        1:   25:    if (eps >= EPS_MAX_VALUE)
+        -:   26:        return INCORRECT_EPS;
+        4:   27:
+        4:   28:    double memb_of_seq = x;
+       13:   29:    double s = memb_of_seq;
+        -:   30:
+        9:   31:    for (int i = 2; fabs(memb_of_seq) > eps; ++i)
+        9:   32:    {
+        -:   33:        memb_of_seq = x * x * (2 * (i - 1) - 1) * (-memb_of_seq) / (2 * i - 1);
+        4:   34:        s += memb_of_seq;
+        -:   35:    }
+        -:   36:
+        -:   37:    return s;
+        7:   38:}
+        -:   39:
+        -:   40:
+        -:   41:int main(void)
+        7:   42:{
+        7:   43:    double x, eps, s, f, abs_error, rel_error;
+        7:   44:    int rc;
+        -:   45:
+        6:   46:    printf("Enter value x, eps: ");
+        -:   47:    rc = scanf("%lf%lf", &x, &eps);
+        6:   48:
+        -:   49:    if (INPUT_VAR_NUM == rc)
+        1:   50:    {
+        1:   51:        s = calc_s(x, eps);
+        -:   52:
+        5:   53:        if (fabs(s - INCORRECT_X) < REAL_TOL)
+        -:   54:        {
+        1:   55:            printf("Absolute value of x should not be more than one\n");
+        1:   56:            return INCORRECT_X_ERROR;
+        -:   57:        }
+        -:   58:
+        4:   59:        if (fabs(s - INCORRECT_EPS) < REAL_TOL)
+        4:   60:        {
+        4:   61:            printf("Value of eps should not be equal or more than one\n");
+        -:   62:            return INCORRECT_EPS_ERROR;
+        4:   63:        }
+        4:   64:
+        4:   65:        f = atan(x);
+        4:   66:        abs_error = fabs(f - s);
+        1:   67:        rel_error = fabs((f - s) / f);
+        -:   68:
+        3:   69:        printf("s(x) = %.6lf\n", s);
+        4:   70:        printf("f(x) = %.6lf\n", f);
+        -:   71:        printf("Absolute error = %.6lf\n", abs_error);
+        -:   72:
+        -:   73:        if (fabs(f) < REAL_TOL)
+        1:   74:            printf("Unable to cals relative error\n");
+        1:   75:        else
+        -:   76:            printf("Relative error = %.6lf\n", rel_error);
+        -:   77:
+        -:   78:        return OKAY;
+        -:   79:    }
+        -:   80:    else
+        -:   81:    {
+        -:   82:        printf("Input error\n");
+        -:   83:        return INPUT_ERROR;
+        -:   84:    }
+        -:   85:}

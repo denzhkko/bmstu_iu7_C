@@ -1,0 +1,1 @@
+neg_01_in.txt ./res/neg_01_out_s.txt

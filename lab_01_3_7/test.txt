@@ -1,0 +1,52 @@
+Input:
+0.3 0.1
+Output:
+s(x) = 0.291000
+f(x) = 0.291457
+Absolute error = 0.000457
+Relative error = 0.001567
+
+
+Input:
+0.1 1e-6
+Output:
+s(x) = 0.099669
+f(x) = 0.099669
+Absolute error = 0.000000
+Relative error = 0.000000
+
+
+Input:
+1 0.1
+Output:
+s(x) = 0.744012
+f(x) = 0.785398
+Absolute error = 0.041387
+Relative error = 0.052695
+
+
+Input:
+0 1e-4
+Output:
+s(x) = 0.000000
+f(x) = 0.000000
+Absolute error = 0.000000
+Unable to cals relative error
+
+
+Input:
+1.1 1e-4
+Output:
+Absolute value of x should not be more than one
+
+
+Input:
+0.1 1
+Output:
+Value of eps should not be equal or more than one
+
+
+Input:
+0.1a 1e-4
+Output:
+Input error

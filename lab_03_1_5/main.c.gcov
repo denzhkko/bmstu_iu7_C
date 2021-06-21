@@ -1,0 +1,215 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:7
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:
+        -:    4:#define MIN_AXIS_LEN 1
+        -:    5:#define MAX_AXIS_LEN 10
+        -:    6:
+        -:    7:// fun input_2dem_array
+        -:    8:#define INCORRECT_DATA 1
+        -:    9:#define INCORRECT_ARRAY_SIZE 2
+        -:   10:#define NOT_ENOUGH_ELEM 3
+        -:   11:
+        -:   12:// fun slice_digit_sum_more_10_elem
+        -:   13:#define SLICE_NUM 3
+        -:   14:#define ZERO_LEN_ARRAY 1
+        -:   15:
+        -:   16:// fun print_array
+        -:   17:#define EMPTY_ARRAY 1
+        -:   18:
+        -:   19:// fun main
+        -:   20:#define OKAY 0
+        -:   21:#define INCORRECT_DATA_ERROR 1
+        -:   22:#define INCORRECT_ARRAY_SIZE_ERROR 2
+        -:   23:#define NOT_ENOUGH_ELEM_ERROR 3
+        -:   24:#define EMPTY_ARRAY_ERROR 4
+        -:   25:#define ZERO_LEN_ARRAY_ERROR 5
+        -:   26:#define UNKNOWN_ERROR 6
+        -:   27:
+        -:   28:
+        7:   29:int input_2dem_array(int (*const arr)[MAX_AXIS_LEN], int *const row_count,
+        -:   30:int *const column_count)
+        -:   31:{
+        7:   32:    int rc = scanf("%d%d", row_count, column_count);
+        -:   33:
+        7:   34:    if (2 != rc)
+        1:   35:        return INCORRECT_DATA;
+        -:   36:    
+        6:   37:    if (*row_count < MIN_AXIS_LEN || *row_count > MAX_AXIS_LEN || 
+        5:   38:    *column_count < MIN_AXIS_LEN || *column_count > MAX_AXIS_LEN)
+        2:   39:        return INCORRECT_ARRAY_SIZE;
+        -:   40:
+        9:   41:    for (int i = 0; i < *row_count; ++i)
+       18:   42:        for (int j = 0; j < *column_count; ++j)
+        -:   43:        {
+       13:   44:            rc = scanf("%d", &arr[i][j]);
+        -:   45:            
+       13:   46:            if (rc != 1)
+        -:   47:            {
+        -:   48:                char c;
+        2:   49:                rc = scanf("%c", &c);
+        -:   50:
+        2:   51:                if (rc == 1 && c != ' ' && c != '\n')
+        1:   52:                    return INCORRECT_DATA;
+        -:   53:                
+        1:   54:                return NOT_ENOUGH_ELEM;
+        -:   55:            }
+        -:   56:        }
+        -:   57:
+        2:   58:    return OKAY;
+        -:   59:}
+        -:   60:
+        7:   61:int check_error_input_2dem_array(const int exit_code)
+        -:   62:{
+        7:   63:    switch (exit_code)
+        -:   64:    {
+        2:   65:        case OKAY:
+        2:   66:            return OKAY;
+        2:   67:        case INCORRECT_DATA:
+        2:   68:            fprintf(stderr, "Incorrect data\n");
+        2:   69:            return INCORRECT_DATA_ERROR;
+        2:   70:        case INCORRECT_ARRAY_SIZE:
+        2:   71:            fprintf(stderr, "Incorrect array size\n");
+        2:   72:            return INCORRECT_ARRAY_SIZE_ERROR;
+        1:   73:        case NOT_ENOUGH_ELEM:
+        1:   74:            fprintf(stderr, "Not enough elem\n");
+        1:   75:            return NOT_ENOUGH_ELEM_ERROR;
+    #####:   76:        default:
+    #####:   77:            fprintf(stderr, "Unknown error\n");
+    #####:   78:            return UNKNOWN_ERROR;
+        -:   79:    }
+        -:   80:}
+        -:   81:
+       12:   82:int digit_sum(int number)
+        -:   83:{
+       12:   84:    number = abs(number);
+        -:   85:
+       12:   86:    int sum = 0;
+       28:   87:    while (number)
+        -:   88:    {
+       16:   89:        sum += number % 10;
+       16:   90:        number /= 10;
+        -:   91:    }
+       12:   92:    return sum;
+        -:   93:}
+        -:   94:
+        2:   95:int slice_digit_sum_more_10_elem(int (*mat)[MAX_AXIS_LEN],
+        -:   96:const int row_count, int column_count)
+        -:   97:{
+        2:   98:    if (row_count < MIN_AXIS_LEN || row_count > MAX_AXIS_LEN || 
+        2:   99:    column_count < MIN_AXIS_LEN || column_count > MAX_AXIS_LEN)
+    #####:  100:        return INCORRECT_ARRAY_SIZE;
+        -:  101:
+        2:  102:    int arr_len = 0;
+        -:  103:    int arr[MAX_AXIS_LEN * MAX_AXIS_LEN];
+        -:  104:    
+        6:  105:    for (int i = 0; i < row_count; ++i)
+       12:  106:        for (int j = 0; j < column_count; ++j)
+        8:  107:            if (digit_sum(mat[i][j]) > 10)
+        2:  108:                arr[arr_len++] = mat[i][j];
+        -:  109:
+        2:  110:    if (0 == arr_len)
+        1:  111:        return ZERO_LEN_ARRAY;
+        -:  112:
+        4:  113:    for (int num = 0; num < SLICE_NUM; ++num)
+        -:  114:    {
+        3:  115:        int k = arr[0];
+        6:  116:        for (int i = 0; i < arr_len - 1; ++i)
+        3:  117:            arr[i] = arr[i + 1];
+        3:  118:        arr[arr_len - 1] = k;
+        -:  119:    }
+        -:  120:
+        -:  121:
+        1:  122:    int arr_index = 0;
+        3:  123:    for (int i = 0; i < row_count; ++i)
+        6:  124:        for (int j = 0; j < column_count; ++j)
+        4:  125:            if (digit_sum(mat[i][j]) > 10)
+        2:  126:                mat[i][j] = arr[arr_index++];
+        -:  127:
+        1:  128:    return OKAY;
+        -:  129:}
+        -:  130:
+        2:  131:int check_error_slice_digit_sum_more_10_elem(const int exit_code)
+        -:  132:{
+        2:  133:    switch (exit_code)
+        -:  134:    {
+        1:  135:        case OKAY:
+        1:  136:            return OKAY;
+    #####:  137:        case INCORRECT_ARRAY_SIZE:
+    #####:  138:            fprintf(stderr, "Incorrect array size\n");
+    #####:  139:            return INCORRECT_ARRAY_SIZE_ERROR;
+        1:  140:        case ZERO_LEN_ARRAY:
+        1:  141:            fprintf(stderr, "Zero array len\n");
+        1:  142:            return ZERO_LEN_ARRAY_ERROR;
+    #####:  143:        default:
+    #####:  144:            fprintf(stderr, "Unknown error\n");
+    #####:  145:            return UNKNOWN_ERROR;
+        -:  146:    }
+        -:  147:}
+        -:  148:
+        1:  149:int print_2dem_array(const int (*const arr)[MAX_AXIS_LEN], 
+        -:  150:const int row_count, const int column_count)
+        -:  151:{
+        1:  152:    if (0 == row_count || 0 == column_count)
+    #####:  153:        return EMPTY_ARRAY;
+        -:  154:
+        1:  155:    if (row_count < MIN_AXIS_LEN || row_count > MAX_AXIS_LEN || 
+        1:  156:    column_count < MIN_AXIS_LEN || column_count > MAX_AXIS_LEN)
+    #####:  157:        return INCORRECT_ARRAY_SIZE;
+        -:  158:
+        3:  159:    for (int i = 0; i < row_count; ++i)
+        -:  160:    {
+        6:  161:        for (int j = 0; j < column_count; ++j)
+        4:  162:            printf("%d ", arr[i][j]);
+        2:  163:        printf("\n");
+        -:  164:    }
+        -:  165:
+        1:  166:    return OKAY;
+        -:  167:}
+        -:  168:
+        1:  169:int check_error_print_2dem_array(const int exit_code)
+        -:  170:{
+        1:  171:    switch (exit_code)
+        -:  172:    {
+        1:  173:        case OKAY:
+        1:  174:            return OKAY;
+    #####:  175:        case EMPTY_ARRAY:
+    #####:  176:            fprintf(stderr, "Empty array\n");
+    #####:  177:            return EMPTY_ARRAY_ERROR;
+    #####:  178:        case INCORRECT_ARRAY_SIZE:
+    #####:  179:            fprintf(stderr, "Incorrect array size\n");
+    #####:  180:            return INCORRECT_ARRAY_SIZE_ERROR;
+    #####:  181:        default:
+    #####:  182:            fprintf(stderr, "Unknown error\n");
+    #####:  183:            return UNKNOWN_ERROR;
+        -:  184:    }
+        -:  185:}
+        -:  186:
+        7:  187:int main(void)
+        -:  188:{
+        -:  189:    int check_fun_exit_code, fun_exit_code;
+        -:  190:
+        -:  191:    int row_count, column_count;
+        -:  192:    int arr[MAX_AXIS_LEN][MAX_AXIS_LEN];
+        -:  193:
+        7:  194:    fun_exit_code = input_2dem_array(arr, &row_count, &column_count);
+        7:  195:    if (OKAY != (check_fun_exit_code = check_error_input_2dem_array(
+        -:  196:    fun_exit_code)))
+        5:  197:        return check_fun_exit_code;
+        -:  198:
+        2:  199:    fun_exit_code = slice_digit_sum_more_10_elem(arr, row_count, column_count);
+        2:  200:    if (OKAY != (check_fun_exit_code = check_error_slice_digit_sum_more_10_elem(
+        -:  201:    fun_exit_code)))
+        1:  202:        return check_fun_exit_code;
+        -:  203:
+        1:  204:    fun_exit_code = print_2dem_array((const int (*)[MAX_AXIS_LEN]) arr,
+        -:  205:    row_count, column_count);
+        1:  206:    if (OKAY != (check_fun_exit_code = check_error_print_2dem_array(
+        -:  207:    fun_exit_code)))
+    #####:  208:        return check_fun_exit_code;
+        -:  209:
+        1:  210:    return OKAY;
+        -:  211:}

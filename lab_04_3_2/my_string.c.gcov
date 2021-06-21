@@ -1,0 +1,132 @@
+        -:    0:Source:my_string.c
+        -:    0:Graph:my_string.gcno
+        -:    0:Data:my_string.gcda
+        -:    0:Runs:5
+        -:    1:#include <stdio.h>
+        -:    2:#include <string.h>
+        -:    3:
+        -:    4:#include "my_string.h"
+        -:    5:
+        8:    6:int my_str_split(const char *const str,
+        -:    7:const char *const sep,
+        -:    8:char words[][MAX_WORD_LEN + 1],
+        -:    9:int *words_count)
+        -:   10:{
+        8:   11:    *words_count = 0;
+        -:   12:
+        -:   13:    char *p;
+        -:   14:    int word_len;
+        -:   15:    
+        8:   16:    p = (char *) str;
+       20:   17:    while (*p != '\0')
+        -:   18:    {
+       54:   19:        for (; '\0' != *p && NULL != strchr(sep, *p); ++p);
+       20:   20:        char *p_word_start = p;
+        -:   21:        
+       20:   22:        if ('\0' == *p_word_start)
+        8:   23:            break;
+        -:   24:
+       56:   25:        for (; '\0' != *p && NULL == strchr(sep, *p); ++p);
+       12:   26:        char *p_word_end = p - 1;
+        -:   27:        
+       12:   28:        word_len = p_word_end - p_word_start + 1;
+        -:   29:
+       12:   30:        if (word_len > MAX_WORD_LEN)
+    #####:   31:            return INCORRECT_WORD_LEN;
+        -:   32:        
+       12:   33:        strncpy(words[*words_count], p_word_start, word_len);
+        -:   34:        
+       12:   35:        words[*words_count][word_len] = '\0';
+       12:   36:        ++(*words_count);
+        -:   37:    }
+        8:   38:    return OKAY;
+        -:   39:}
+        -:   40:
+       24:   41:int count_word_entries(const char *const word,
+        -:   42:char words[][MAX_WORD_LEN + 1], const int words_count)
+        -:   43:{
+       24:   44:    if (words_count < 0)
+    #####:   45:        return INCORRECT_WORDS_COUNT;
+        -:   46:
+       24:   47:    int count = 0;
+       72:   48:    for (int i = 0; i < words_count; ++i)
+       48:   49:        if (strcmp(word, words[i]) == 0)
+       14:   50:            ++count;
+        -:   51:
+       24:   52:    return count;
+        -:   53:}
+        -:   54:
+        4:   55:int my_get_uniq_words(char words_1[][MAX_WORD_LEN + 1],
+        -:   56:char words_2[][MAX_WORD_LEN + 1],
+        -:   57:int *words_1_count,
+        -:   58:int *words_2_count, 
+        -:   59:char uniq_words[][MAX_WORD_LEN + 1],
+        -:   60:int *uniq_words_count)
+        -:   61:{
+        4:   62:    if (*words_1_count < 0 || *words_2_count < 0)
+    #####:   63:        return INCORRECT_MATRIX_SIZE;
+        -:   64:
+        4:   65:    *uniq_words_count = 0;
+       10:   66:    for (int i = 0; i < *words_1_count; ++i)
+        -:   67:    {
+        6:   68:        int count_1 = count_word_entries(words_1[i], words_1, *words_1_count);
+        6:   69:        int count_2 = count_word_entries(words_1[i], words_2, *words_2_count);
+        -:   70:        
+        6:   71:        if (count_1 == INCORRECT_WORDS_COUNT || count_2 == INCORRECT_WORDS_COUNT)
+    #####:   72:            return INCORRECT_WORDS_COUNT;
+        -:   73:        
+        6:   74:        if (count_1 + count_2 == 1)
+        -:   75:        {
+        5:   76:            strcpy(uniq_words[*uniq_words_count], words_1[i]);
+        5:   77:            ++*uniq_words_count;
+        -:   78:        }
+        -:   79:    }
+        -:   80:
+       10:   81:    for (int i = 0; i < *words_2_count; ++i)
+        -:   82:    {
+        6:   83:        int count_1 = count_word_entries(words_2[i], words_1, *words_1_count);
+        6:   84:        int count_2 = count_word_entries(words_2[i], words_2, *words_2_count);
+        -:   85:
+        6:   86:        if (count_1 + count_2 == 1)
+        -:   87:        {
+        5:   88:            strcpy(uniq_words[*uniq_words_count], words_2[i]);
+        5:   89:            ++*uniq_words_count;
+        -:   90:        }
+        -:   91:    }
+        -:   92:
+        4:   93:    return OKAY;
+        -:   94:}
+        -:   95:
+        4:   96:int my_print_answer(char words[][MAX_WORD_LEN + 1],
+        -:   97:const int words_count)
+        -:   98:{
+        4:   99:    if (words_count <= 0)
+        1:  100:        return INCORRECT_WORDS_COUNT;
+        -:  101:
+        3:  102:    printf("Result: ");
+       13:  103:    for (int i = 0; i < words_count; ++i)
+       10:  104:        printf("%s ", words[i]);
+        3:  105:    printf("\n");
+        -:  106:
+        3:  107:    return OKAY;
+        -:  108:}
+        -:  109:
+       17:  110:int error_processing(const int exit_code)
+        -:  111:{
+       17:  112:    switch (exit_code)
+        -:  113:    {
+       15:  114:        case OKAY:
+       15:  115:            return OKAY;
+        1:  116:        case INCORRECT_INPUT:
+        1:  117:            return INCORRECT_INPUT_ERROR;
+    #####:  118:        case INCORRECT_MATRIX_SIZE:
+    #####:  119:            return INCORRECT_MATRIX_SIZE_ERROR;
+        1:  120:        case INCORRECT_WORDS_COUNT:
+        1:  121:            return INCORRECT_WORDS_COUNT_ERROR;
+    #####:  122:        case INCORRECT_WORD_LEN:
+    #####:  123:            return INCORRECT_WORD_LEN_ERROR;
+    #####:  124:        default:
+    #####:  125:            fprintf(stderr, UNKNOWN_ERROR_MESS);
+    #####:  126:            return UNKNOWN_ERROR_ERROR;
+        -:  127:    }
+        -:  128:}

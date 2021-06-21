@@ -1,0 +1,87 @@
+        -:    0:Source:main.c
+        -:    0:Graph:./main.gcno
+        -:    0:Data:./main.gcda
+        -:    0:Runs:4
+        -:    1:/* Type: int32_t
+        -:    2: * Algorithm: bobble sort
+        -:    3: * Orientation: increase
+        -:    4: */
+        -:    5:
+        -:    6:#include <stdio.h>
+        -:    7:#include <string.h>
+        -:    8:
+        -:    9:#include "funcs.h"
+        -:   10:
+        4:   11:int main(int argc, char **argv)
+        -:   12:{
+        -:   13:    FILE *f;
+        -:   14:    int rc;
+        4:   15:    int grc = OKAY;
+        -:   16:
+        4:   17:    if (3 == argc)
+        -:   18:    {
+        4:   19:        if (0 == strcmp(argv[1], "c"))
+        -:   20:        {
+    #####:   21:            f = fopen(argv[2], "wb");
+        -:   22:
+    #####:   23:            if (f)
+        -:   24:            {
+    #####:   25:                size_t num_count = 9;
+        -:   26:
+    #####:   27:                if (OKAY != (rc = fill_file(f, num_count)))
+    #####:   28:                    grc = process_exit_code(rc);
+        -:   29:
+    #####:   30:                if (EOF == fclose(f))
+    #####:   31:                    grc = process_exit_code(FCLOSE_FAILED);
+        -:   32:            }
+        -:   33:            else
+        -:   34:            {
+    #####:   35:                grc = process_exit_code(FILE_CANNOT_BE_OPENED);
+        -:   36:            }
+        -:   37:        }
+        4:   38:        else if (0 == strcmp(argv[1], "p"))
+        -:   39:        {
+        3:   40:            f = fopen(argv[2], "rb");
+        -:   41:
+        3:   42:            if (f)
+        -:   43:            {
+        3:   44:                if (OKAY != (rc = print_file(f)))
+        1:   45:                    grc = process_exit_code(rc);
+        -:   46:
+        3:   47:                if (EOF == fclose(f))
+    #####:   48:                    grc = process_exit_code(FCLOSE_FAILED);
+        -:   49:            }
+        -:   50:            else
+        -:   51:            {
+    #####:   52:                grc = process_exit_code(FILE_CANNOT_BE_OPENED);
+        -:   53:            }
+        -:   54:        }
+        1:   55:        else if (0 == strcmp(argv[1], "s"))
+        -:   56:        {
+        1:   57:            f = fopen(argv[2], "rb+");
+        -:   58:
+        1:   59:            if (f)
+        -:   60:            {
+        1:   61:                if (OKAY != (rc = sort_file(f)))
+    #####:   62:                    grc = process_exit_code(rc);
+        -:   63:
+        1:   64:                if (EOF == fclose(f))
+    #####:   65:                    grc = process_exit_code(FCLOSE_FAILED);
+        -:   66:            }
+        -:   67:            else
+        -:   68:            {
+    #####:   69:                grc = process_exit_code(FILE_CANNOT_BE_OPENED);
+        -:   70:            }
+        -:   71:        }
+        -:   72:        else
+        -:   73:        {
+    #####:   74:            grc = process_exit_code(INCORRECT_COMMAND_ERROR);
+        -:   75:        }
+        -:   76:    }
+        -:   77:    else
+        -:   78:    {
+    #####:   79:        grc = process_exit_code(INCORRECT_START);
+        -:   80:    }
+        -:   81:    
+        4:   82:    return grc;
+        -:   83:}

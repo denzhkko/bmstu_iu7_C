@@ -1,0 +1,195 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:7
+        -:    1:#include <stdio.h>
+        -:    2:
+        -:    3:#define TRUE 1
+        -:    4:#define FALSE 0
+        -:    5:
+        -:    6:#define MIN_AXIS_LEN 1
+        -:    7:#define MAX_AXIS_LEN 10
+        -:    8:
+        -:    9:// fun input_2dem_array
+        -:   10:#define INCORRECT_DATA 1
+        -:   11:#define INCORRECT_ARRAY_SIZE 2
+        -:   12:#define NOT_ENOUGH_ELEM 3
+        -:   13:
+        -:   14:// fun main
+        -:   15:#define OKAY 0
+        -:   16:#define INCORRECT_DATA_ERROR 1
+        -:   17:#define INCORRECT_ARRAY_SIZE_ERROR 2
+        -:   18:#define NOT_ENOUGH_ELEM_ERROR 3
+        -:   19:#define UNKNOWN_ERROR 4
+        -:   20:
+        7:   21:int input_2dem_array(float (*const arr)[MAX_AXIS_LEN], int *const row_count,
+        -:   22:int *const column_count)
+        -:   23:{
+        7:   24:    int rc = scanf("%d%d", row_count, column_count);
+        -:   25:
+        7:   26:    if (2 != rc)
+        1:   27:        return INCORRECT_DATA;
+        -:   28:    
+        6:   29:    if (*row_count < MIN_AXIS_LEN || *row_count > MAX_AXIS_LEN || 
+        5:   30:    *column_count < MIN_AXIS_LEN || *column_count > MAX_AXIS_LEN)
+        2:   31:        return INCORRECT_ARRAY_SIZE;
+        -:   32:
+       11:   33:    for (int i = 0; i < *row_count; ++i)
+       27:   34:        for (int j = 0; j < *column_count; ++j)
+        -:   35:        {
+       20:   36:            rc = scanf("%f", &arr[i][j]);
+        -:   37:            
+       20:   38:            if (rc != 1)
+        -:   39:            {
+        -:   40:                char c;
+        2:   41:                rc = scanf("%c", &c);
+        -:   42:
+        2:   43:                if (rc == 1 && c != ' ' && c != '\n')
+        1:   44:                    return INCORRECT_DATA;
+        -:   45:                
+        1:   46:                return NOT_ENOUGH_ELEM;
+        -:   47:            }
+        -:   48:        }
+        -:   49:
+        2:   50:    return OKAY;
+        -:   51:}
+        -:   52:
+        7:   53:int check_error_input_2dem_array(const int exit_code)
+        -:   54:{
+        7:   55:    switch (exit_code)
+        -:   56:    {
+        2:   57:        case INCORRECT_DATA:
+        2:   58:            fprintf(stderr, "Incorrect data\n");
+        2:   59:            return INCORRECT_DATA_ERROR;
+        2:   60:        case INCORRECT_ARRAY_SIZE:
+        2:   61:            fprintf(stderr, "Incorrect array size\n");
+        2:   62:            return INCORRECT_ARRAY_SIZE_ERROR;
+        1:   63:        case NOT_ENOUGH_ELEM:
+        1:   64:            fprintf(stderr, "Not enough elem\n");
+        1:   65:            return NOT_ENOUGH_ELEM_ERROR;
+        2:   66:        case OKAY:
+        2:   67:            return OKAY;
+    #####:   68:        default:
+    #####:   69:            fprintf(stderr, "Unknown error\n");
+    #####:   70:            return UNKNOWN_ERROR;
+        -:   71:    }
+        -:   72:}
+        -:   73:
+        6:   74:int is_non_growing_seq(const float *const seq, const int len)
+        -:   75:{
+        6:   76:    if (len <= 1)
+        3:   77:        return FALSE;
+        -:   78:
+        6:   79:    for (int i = 1; i < len; ++i)
+        5:   80:        if (seq[i - 1] < seq[i])
+        2:   81:            return FALSE;
+        1:   82:    return TRUE;
+        -:   83:}
+        -:   84:
+        5:   85:int is_non_decreasing_seq(const float *const seq, const int len)
+        -:   86:{
+        5:   87:    if (len <= 1)
+        3:   88:        return FALSE;
+        -:   89:
+        7:   90:    for (int i = 1; i < len; ++i)
+        6:   91:        if (seq[i - 1] > seq[i])
+        1:   92:            return FALSE;
+        1:   93:    return TRUE;
+        -:   94:}
+        -:   95:
+        6:   96:int is_mono_seq(const float *const seq, const int len)
+        -:   97:{
+        6:   98:    if (is_non_growing_seq(seq, len))
+        1:   99:        return TRUE;
+        -:  100:
+        5:  101:    if (is_non_decreasing_seq(seq, len))
+        1:  102:        return TRUE;
+        -:  103:
+        4:  104:    return FALSE;
+        -:  105:}
+        -:  106:
+        2:  107:int mono_seq_arr(const float (*const arr)[MAX_AXIS_LEN], const int row_count, 
+        -:  108:const int column_count, int *const mono_arr)
+        -:  109:{
+        2:  110:    if (row_count < MIN_AXIS_LEN || row_count > MAX_AXIS_LEN || 
+        2:  111:    column_count < MIN_AXIS_LEN || column_count > MAX_AXIS_LEN)
+    #####:  112:        return INCORRECT_ARRAY_SIZE;
+        -:  113:
+        8:  114:    for (int k = 0; k < row_count; ++k)
+        -:  115:    {
+        6:  116:        if (is_mono_seq(&arr[k][0], column_count))
+        2:  117:            mono_arr[k] = 1;
+        -:  118:        else
+        4:  119:            mono_arr[k] = 0;
+        -:  120:    }
+        2:  121:    return OKAY;
+        -:  122:}
+        -:  123:
+        2:  124:int check_error_mono_seq_arr(const int exit_code)
+        -:  125:{
+        2:  126:    switch (exit_code)
+        -:  127:    {
+    #####:  128:        case INCORRECT_ARRAY_SIZE:
+    #####:  129:            fprintf(stderr, "Incorrect array size");
+    #####:  130:            return INCORRECT_ARRAY_SIZE_ERROR;
+        2:  131:        case OKAY:
+        2:  132:            return OKAY;
+    #####:  133:        default:
+    #####:  134:            fprintf(stderr, "Unknown error\n");
+    #####:  135:            return UNKNOWN_ERROR;
+        -:  136:    }
+        -:  137:}
+        -:  138:
+        2:  139:int print_1dem_array(const int *const arr, const int len)
+        -:  140:{
+        2:  141:    if (len <= 0)
+    #####:  142:        return INCORRECT_ARRAY_SIZE;
+        -:  143:
+        8:  144:    for (int i = 0; i < len; ++i)
+        6:  145:        printf("%d ", arr[i]);
+        2:  146:    printf("\n");
+        -:  147:
+        2:  148:    return OKAY;
+        -:  149:}
+        -:  150:
+        2:  151:int check_error_print_1dem_array(const int exit_code)
+        -:  152:{
+        2:  153:    switch (exit_code)
+        -:  154:    {
+    #####:  155:        case INCORRECT_ARRAY_SIZE:
+    #####:  156:            fprintf(stderr, "Incorrect array size\n");
+    #####:  157:            return INCORRECT_ARRAY_SIZE_ERROR;
+        2:  158:        case OKAY:
+        2:  159:            return OKAY;
+    #####:  160:        default:
+    #####:  161:            fprintf(stderr, "Unknown error\n");
+    #####:  162:            return UNKNOWN_ERROR;
+        -:  163:    }
+        -:  164:}
+        -:  165:
+        7:  166:int main(void)
+        -:  167:{
+        -:  168:    int check_fun_exit_code, fun_exit_code;
+        -:  169:
+        -:  170:    int row_count, column_count;
+        -:  171:    float arr[MAX_AXIS_LEN][MAX_AXIS_LEN];
+        -:  172:
+        7:  173:    fun_exit_code = input_2dem_array(arr, &row_count, &column_count);
+        7:  174:    if (OKAY != (check_fun_exit_code = check_error_input_2dem_array(
+        -:  175:    fun_exit_code)))
+        5:  176:        return check_fun_exit_code;
+        -:  177:
+        -:  178:    int mono_arr[MAX_AXIS_LEN];
+        -:  179:
+        2:  180:    fun_exit_code = mono_seq_arr((const float (*)[MAX_AXIS_LEN]) arr, row_count,
+        -:  181:    column_count, mono_arr);
+        2:  182:    if (OKAY != (check_fun_exit_code = check_error_mono_seq_arr(fun_exit_code)))
+    #####:  183:        return check_fun_exit_code;
+        -:  184:
+        2:  185:    fun_exit_code = print_1dem_array(mono_arr, row_count);
+        2:  186:    if (OKAY != (check_fun_exit_code = check_error_print_1dem_array(
+        -:  187:    fun_exit_code)))
+    #####:  188:        return check_fun_exit_code;
+        -:  189:
+        2:  190:    return OKAY;
+        -:  191:}

@@ -1,0 +1,70 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <string.h>
+        -:    3:
+        -:    4:#include "my_string.h"
+        -:    5:
+        -:    6:#define TRUE 1
+        -:    7:#define FALSE 0
+        -:    8:
+        4:    9:void print_cmp_res(const char *dt_str, const char *dt_keys,
+        -:   10:const int test_number, int *is_all_res_same)
+        -:   11:{
+        4:   12:    char *str_res = strpbrk(dt_str, dt_keys);
+        4:   13:    if (str_res)
+        2:   14:        printf("%s\n", str_res);
+        -:   15:    else
+        2:   16:        printf("NULL\n");
+        -:   17:
+        4:   18:    char *my_res = my_strpbrk(dt_str, dt_keys);
+        4:   19:    if (my_res)
+        2:   20:        printf("%s\n", my_res);
+        -:   21:    else
+        2:   22:        printf("NULL\n");
+        -:   23:
+        4:   24:    if (str_res == my_res)
+        4:   25:        printf("%d test: success\n\n", test_number);
+        -:   26:    else
+        -:   27:    {
+    #####:   28:        *is_all_res_same = FALSE;
+    #####:   29:        printf("%d test: error\n\n", test_number);
+        -:   30:    }
+        4:   31:}
+        -:   32:
+        -:   33:
+        1:   34:int main(void)
+        -:   35:{
+        1:   36:    int is_all_res_same = TRUE;
+        -:   37:
+        -:   38:    // 1 key test
+        1:   39:    char *dt_1_str = "Hello world";
+        1:   40:    char *dt_1_keys = "e";
+        1:   41:    print_cmp_res(dt_1_str, dt_1_keys, 1, &is_all_res_same);
+        -:   42:
+        -:   43:    // 2 keys test
+        1:   44:    char *dt_2_str = "Hello world";
+        1:   45:    char *dt_2_keys = "oe";
+        1:   46:    print_cmp_res(dt_2_str, dt_2_keys, 2, &is_all_res_same);
+        -:   47:
+        -:   48:    // unused keys test
+        1:   49:    char *dt_3_str = "Hello world";
+        1:   50:    char *dt_3_keys = "123";
+        1:   51:    print_cmp_res(dt_3_str, dt_3_keys, 3, &is_all_res_same);
+        -:   52:
+        -:   53:    // not keys test
+        1:   54:    char *dt_4_str = "Hello world";
+        1:   55:    char *dt_4_keys = "";
+        1:   56:    print_cmp_res(dt_4_str, dt_4_keys, 4, &is_all_res_same);
+        -:   57:
+        1:   58:    if (is_all_res_same)
+        -:   59:    {
+        1:   60:        printf("\nAll test passed successfully\n");
+        1:   61:        return 0;
+        -:   62:    }
+        -:   63:
+    #####:   64:    printf("\nSome differences in tests\n");
+    #####:   65:    return 1;
+        -:   66:}

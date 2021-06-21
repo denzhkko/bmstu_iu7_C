@@ -1,0 +1,1 @@
+neg_02_in.txt ./res/neg_02_out_f.txt ./res/neg_02_out_s.txt

@@ -1,0 +1,263 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:12
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:
+        -:    4:#define TRUE 1
+        -:    5:#define FALSE 0
+        -:    6:
+        -:    7:#define MIN_AXIS_LEN 1
+        -:    8:#define MAX_AXIS_LEN 10
+        -:    9:
+        -:   10:// fun input_2dem_array
+        -:   11:#define INCORRECT_DATA 1
+        -:   12:#define INCORRECT_ARRAY_SIZE 2
+        -:   13:#define NOT_ENOUGH_ELEM 3
+        -:   14:
+        -:   15:// fun input_digit
+        -:   16:#define IS_NOT_DIGIT 4
+        -:   17:
+        -:   18:// fun delete_column
+        -:   19:#define INCORRECT_COLUMN_INDEX 1
+        -:   20:
+        -:   21:// fun print_array
+        -:   22:#define EMPTY_ARRAY 1
+        -:   23:
+        -:   24:// fun main
+        -:   25:#define OKAY 0
+        -:   26:#define INCORRECT_DATA_ERROR 1
+        -:   27:#define INCORRECT_ARRAY_SIZE_ERROR 2
+        -:   28:#define NOT_ENOUGH_ELEM_ERROR 3
+        -:   29:#define IS_NOT_DIGIT_ERROR 4
+        -:   30:#define EMPTY_ARRAY_ERROR 5
+        -:   31:#define UNKNOWN_ERROR 6
+        -:   32:
+       12:   33:int input_2dem_array(int (*const arr)[MAX_AXIS_LEN], int *const row_count,
+        -:   34:int *const column_count)
+        -:   35:{
+       12:   36:    int rc = scanf("%d%d", row_count, column_count);
+        -:   37:
+       12:   38:    if (2 != rc)
+        1:   39:        return INCORRECT_DATA;
+        -:   40:    
+       11:   41:    if (*row_count < MIN_AXIS_LEN || *row_count > MAX_AXIS_LEN || 
+       10:   42:    *column_count < MIN_AXIS_LEN || *column_count > MAX_AXIS_LEN)
+        2:   43:        return INCORRECT_ARRAY_SIZE;
+        -:   44:
+       27:   45:    for (int i = 0; i < *row_count; ++i)
+       66:   46:        for (int j = 0; j < *column_count; ++j)
+        -:   47:        {
+       48:   48:            rc = scanf("%d", &arr[i][j]);
+        -:   49:            
+       48:   50:            if (rc != 1)
+        -:   51:            {
+        -:   52:                char c;
+        2:   53:                rc = scanf("%c", &c);
+        -:   54:
+        2:   55:                if (rc == 1 && c != ' ' && c != '\n')
+        1:   56:                    return INCORRECT_DATA;
+        -:   57:                
+        1:   58:                return NOT_ENOUGH_ELEM;
+        -:   59:            }
+        -:   60:        }
+        -:   61:
+        7:   62:    return OKAY;
+        -:   63:}
+        -:   64:
+       12:   65:int check_error_input_2dem_array(const int exit_code)
+        -:   66:{
+       12:   67:    switch (exit_code)
+        -:   68:    {
+        2:   69:        case INCORRECT_DATA:
+        2:   70:            fprintf(stderr, "Incorrect data\n");
+        2:   71:            return INCORRECT_DATA_ERROR;
+        2:   72:        case INCORRECT_ARRAY_SIZE:
+        2:   73:            fprintf(stderr, "Incorrect array size\n");
+        2:   74:            return INCORRECT_ARRAY_SIZE_ERROR;
+        1:   75:        case NOT_ENOUGH_ELEM:
+        1:   76:            fprintf(stderr, "Not enough elem\n");
+        1:   77:            return NOT_ENOUGH_ELEM_ERROR;
+        7:   78:        case OKAY:
+        7:   79:            return OKAY;
+    #####:   80:        default:
+    #####:   81:            fprintf(stderr, "Unknown error\n");
+    #####:   82:            return UNKNOWN_ERROR;
+        -:   83:    }
+        -:   84:}
+        -:   85:
+        7:   86:int input_digit(int *const digit)
+        -:   87:{
+        7:   88:    int rc = scanf("%d", digit);
+        -:   89:
+        7:   90:    if (1 != rc)
+        1:   91:        return INCORRECT_DATA;
+        -:   92:
+        6:   93:    if (*digit < 0 || *digit > 9)
+        1:   94:        return IS_NOT_DIGIT;
+        -:   95:
+        5:   96:    return OKAY;
+        -:   97:}
+        -:   98:
+        7:   99:int check_error_input_digit(const int exit_code)
+        -:  100:{
+        7:  101:    switch (exit_code)
+        -:  102:    {
+        1:  103:        case INCORRECT_DATA:
+        1:  104:            fprintf(stderr, "Incorrect data\n");
+        1:  105:            return INCORRECT_DATA_ERROR;
+        1:  106:        case IS_NOT_DIGIT:
+        1:  107:            fprintf(stderr, "Is not digit\n");
+        1:  108:            return IS_NOT_DIGIT_ERROR;
+        5:  109:        case OKAY:
+        5:  110:            return OKAY;
+    #####:  111:        default:
+    #####:  112:            fprintf(stderr, "Unknown error\n");
+    #####:  113:            return UNKNOWN_ERROR;
+        -:  114:    }
+        -:  115:}
+        -:  116:
+       37:  117:int has_digit(int number, const int digit)
+        -:  118:{
+       37:  119:    number = abs(number);
+        -:  120:
+       37:  121:    if (number == 0 && digit == 0)
+        1:  122:        return TRUE;
+        -:  123:
+       67:  124:    while (number)
+        -:  125:    {
+       35:  126:        int last_digit = number % 10;
+        -:  127:        
+       35:  128:        if (digit == last_digit)
+        4:  129:            return TRUE;
+        -:  130:        
+       31:  131:        number /= 10;
+        -:  132:    }
+       32:  133:    return FALSE;
+        -:  134:}
+        -:  135:
+        5:  136:int delete_column(int (*arr)[MAX_AXIS_LEN], const int row_count, 
+        -:  137:const int column_count, const int column_index)
+        -:  138:{
+        5:  139:    if (column_index < 0 || column_index + 1 > column_count)
+    #####:  140:        return INCORRECT_COLUMN_INDEX;
+        -:  141:
+       17:  142:    for (int i = 0; i < row_count; ++i)
+       17:  143:        for (int j = column_index; j < column_count - 1; ++j)
+        5:  144:            arr[i][j] = arr[i][j + 1];
+        -:  145:
+        5:  146:    return OKAY;
+        -:  147:}
+        -:  148:
+        5:  149:int delete_column_with_digit(int (*arr)[MAX_AXIS_LEN], const int row_count, 
+        -:  150:int *column_count, const int digit)
+        -:  151:{
+        5:  152:    if (row_count < MIN_AXIS_LEN || row_count > MAX_AXIS_LEN || 
+        5:  153:    *column_count < MIN_AXIS_LEN || *column_count > MAX_AXIS_LEN)
+    #####:  154:        return INCORRECT_ARRAY_SIZE;
+        -:  155:
+        5:  156:    if (digit < 0 || digit > 9)
+    #####:  157:        return IS_NOT_DIGIT;
+        -:  158:
+       20:  159:    next_column: for (int j = *column_count - 1; j >= 0; --j)
+       47:  160:        for (int i = 0; i < row_count; ++i)
+       37:  161:            if (has_digit(arr[i][j], digit))
+        -:  162:            {
+        5:  163:                delete_column(arr, row_count, *column_count, j);
+        5:  164:                --*column_count;
+        5:  165:                --j;
+        5:  166:                goto next_column;
+        -:  167:            }
+        -:  168:
+        5:  169:    return OKAY;
+        -:  170:}
+        -:  171:
+        5:  172:int check_error_delete_column_with_digit(const int exit_code)
+        -:  173:{
+        5:  174:    switch (exit_code)
+        -:  175:    {
+        5:  176:        case OKAY:
+        5:  177:            return OKAY;
+    #####:  178:        case INCORRECT_ARRAY_SIZE:
+    #####:  179:            fprintf(stderr, "Incorrect array size\n");
+    #####:  180:            return INCORRECT_ARRAY_SIZE_ERROR;
+    #####:  181:        case IS_NOT_DIGIT:
+    #####:  182:            fprintf(stderr, "IS not digit\n");
+    #####:  183:            return IS_NOT_DIGIT_ERROR;
+    #####:  184:        default:
+    #####:  185:            fprintf(stderr, "Unknown error\n");
+    #####:  186:            return UNKNOWN_ERROR;
+        -:  187:    }
+        -:  188:}
+        -:  189:
+        5:  190:int print_2dem_array(const int (*const arr)[MAX_AXIS_LEN], const int row_count, 
+        -:  191:const int column_count)
+        -:  192:{
+        5:  193:    if (0 == row_count || 0 == column_count)
+        1:  194:        return EMPTY_ARRAY;
+        -:  195:
+        4:  196:    if (row_count < MIN_AXIS_LEN || row_count > MAX_AXIS_LEN || 
+        4:  197:    column_count < MIN_AXIS_LEN || column_count > MAX_AXIS_LEN)
+    #####:  198:        return INCORRECT_ARRAY_SIZE;
+        -:  199:
+       15:  200:    for (int i = 0; i < row_count; ++i)
+        -:  201:    {
+       34:  202:        for (int j = 0; j < column_count; ++j)
+       23:  203:            printf("%d ", arr[i][j]);
+       11:  204:        printf("\n");
+        -:  205:    }
+        -:  206:
+        4:  207:    return OKAY;
+        -:  208:}
+        -:  209:
+        5:  210:int check_error_print_2dem_array(const int exit_code)
+        -:  211:{
+        5:  212:    switch (exit_code)
+        -:  213:    {
+        4:  214:        case OKAY:
+        4:  215:            return OKAY;
+        1:  216:        case EMPTY_ARRAY:
+        1:  217:            fprintf(stderr, "Empty array\n");
+        1:  218:            return EMPTY_ARRAY_ERROR;
+    #####:  219:        case INCORRECT_ARRAY_SIZE:
+    #####:  220:            fprintf(stderr, "Incorrect array size\n");
+    #####:  221:            return INCORRECT_ARRAY_SIZE_ERROR;
+    #####:  222:        default:
+    #####:  223:            fprintf(stderr, "Unknown error\n");
+    #####:  224:            return UNKNOWN_ERROR;
+        -:  225:    }
+        -:  226:}
+        -:  227:
+       12:  228:int main(void)
+        -:  229:{
+        -:  230:    int check_fun_exit_code, fun_exit_code;
+        -:  231:
+        -:  232:    int row_count, column_count;
+        -:  233:    int arr[MAX_AXIS_LEN][MAX_AXIS_LEN];
+        -:  234:
+       12:  235:    fun_exit_code = input_2dem_array(arr, &row_count, &column_count);
+       12:  236:    if (OKAY != (check_fun_exit_code = check_error_input_2dem_array(
+        -:  237:    fun_exit_code)))
+        5:  238:        return check_fun_exit_code;
+        -:  239:
+        -:  240:    int digit;
+        -:  241:
+        7:  242:    fun_exit_code = input_digit(&digit);
+        7:  243:    if (OKAY != (check_fun_exit_code = check_error_input_digit(fun_exit_code)))
+        2:  244:        return check_fun_exit_code;
+        -:  245:
+        5:  246:    fun_exit_code = delete_column_with_digit(arr, row_count, &column_count, 
+        -:  247:    digit);
+        5:  248:    if (OKAY != (check_fun_exit_code = check_error_delete_column_with_digit(
+        -:  249:    fun_exit_code)))
+    #####:  250:        return check_fun_exit_code;
+        -:  251:
+        5:  252:    fun_exit_code = print_2dem_array((const int (*)[MAX_AXIS_LEN]) arr,
+        -:  253:    row_count, column_count);
+        5:  254:    if (OKAY != (check_fun_exit_code = check_error_print_2dem_array(
+        -:  255:    fun_exit_code)))
+        1:  256:        return check_fun_exit_code;
+        -:  257:
+        4:  258:    return OKAY;
+        -:  259:}

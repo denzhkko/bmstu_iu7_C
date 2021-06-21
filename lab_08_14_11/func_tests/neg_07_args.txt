@@ -1,0 +1,1 @@
+o neg_07_f.txt ./res/neg_07_out.txt

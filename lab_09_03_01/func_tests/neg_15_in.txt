@@ -1,0 +1,5 @@
+2
+potato
+100
+carrot
+300

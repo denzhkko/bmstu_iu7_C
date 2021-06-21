@@ -1,0 +1,49 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:5
+        -:    1:#include <stdio.h>
+        -:    2:
+        -:    3:#include "my_string.h"
+        -:    4:
+        5:    5:int main(void)
+        -:    6:{
+        5:    7:    char *sep = " ,;:-.!?\n";
+        -:    8:    int exit_code;
+        -:    9:
+        -:   10:    char str1[MAX_STR_LEN + 1], str2[MAX_STR_LEN + 1];
+        -:   11:   
+        5:   12:    if (NULL == fgets(str1, sizeof(str1), stdin))
+    #####:   13:        if (OKAY != (exit_code = error_processing(INCORRECT_INPUT)))
+    #####:   14:            return exit_code;
+        -:   15:
+        5:   16:    if (NULL == fgets(str2, sizeof(str2), stdin))
+        1:   17:        if (OKAY != (exit_code = error_processing(INCORRECT_INPUT)))
+        1:   18:            return exit_code;
+        -:   19:
+        -:   20:    int words_1_count, words_2_count;
+        -:   21:
+        -:   22:    char words_1[MAX_WORD_COUNT][MAX_WORD_LEN + 1];
+        4:   23:    exit_code = my_str_split(str1, sep, words_1, &words_1_count);
+        4:   24:    if (OKAY != (exit_code = error_processing(exit_code)))
+    #####:   25:        return exit_code;
+        -:   26:
+        -:   27:    char words_2[MAX_WORD_COUNT][MAX_WORD_LEN + 1];
+        4:   28:    exit_code = my_str_split(str2, sep, words_2, &words_2_count);
+        4:   29:    if (OKAY != (exit_code = error_processing(exit_code)))
+    #####:   30:        return exit_code;
+        -:   31:
+        -:   32:    char uniq_words[2 * MAX_WORD_COUNT][MAX_WORD_LEN + 1];
+        -:   33:    int uniq_words_count;
+        -:   34:
+        4:   35:    exit_code = my_get_uniq_words(words_1, words_2, &words_1_count,
+        -:   36:    &words_2_count, uniq_words, &uniq_words_count);
+        4:   37:    if (OKAY != (exit_code = error_processing(exit_code)))
+    #####:   38:        return exit_code;
+        -:   39:
+        4:   40:    exit_code = my_print_answer(uniq_words, uniq_words_count);
+        4:   41:    if (OKAY != (exit_code = error_processing(exit_code)))
+        1:   42:        return exit_code;
+        -:   43:
+        3:   44:    return OKAY;
+        -:   45:}

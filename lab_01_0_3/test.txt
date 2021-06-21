@@ -1,0 +1,4 @@
+Input:
+180 101 70
+Output:
+Normal weight, index of mass: 75.75000 21.60494

@@ -1,0 +1,1 @@
+No armstrong numbers in origin array

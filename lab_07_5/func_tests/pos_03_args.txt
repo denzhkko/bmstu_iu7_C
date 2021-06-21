@@ -1,0 +1,1 @@
+../app.exe pos_03_src.txt res/pos_03_dest.txt

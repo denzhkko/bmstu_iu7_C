@@ -1,0 +1,106 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:9
+        -:    1:#include <stdio.h>
+        -:    2:#include <math.h>
+        -:    3:
+        -:    4:#define MIN_ARRAY_LEN 1
+        -:    5:#define MAX_ARRAY_LEN 10
+        -:    6:#define REAL_TOL 1e-6
+        -:    7:
+        -:    8:#define INCORRECT_DATA -1
+        -:    9:#define INCORRECT_ARRAY_LEN -2
+        -:   10:#define NOT_ENOUGH_ELEM -3
+        -:   11:
+        -:   12:#define NO_POSITIVE_ELEM -2.0
+        -:   13:
+        -:   14:#define OKAY 0
+        -:   15:#define INCORRECT_DATA_ERROR 1
+        -:   16:#define INCORRECT_ARRAY_LEN_ERROR 2
+        -:   17:#define NOT_ENOUGH_ELEM_ERROR 3
+        -:   18:#define NO_POSITIVE_ELEM_ERROR 4
+        -:   19:
+        9:   20:int input_array(float *arr)
+        -:   21:{
+        -:   22:    int arr_len;
+        9:   23:    int rc = scanf("%d", &arr_len);
+        -:   24:
+        9:   25:    if (1 != rc)
+        1:   26:        return INCORRECT_DATA;
+        -:   27:
+        8:   28:    if (arr_len < MIN_ARRAY_LEN || arr_len > MAX_ARRAY_LEN)
+        2:   29:        return INCORRECT_ARRAY_LEN;
+        -:   30:
+       16:   31:    for (int i = 0; i < arr_len; ++i)
+        -:   32:    {
+       13:   33:        rc = scanf("%f", &arr[i]);
+       13:   34:        if (rc != 1)
+        -:   35:        {
+        -:   36:            char c;
+        3:   37:            rc = scanf("%c", &c);
+        3:   38:            if (1 == rc && c != ' ' && c != '\n')
+        2:   39:                return INCORRECT_DATA;
+        -:   40:
+        1:   41:            return NOT_ENOUGH_ELEM;
+        -:   42:        }
+        -:   43:    }
+        -:   44:
+        3:   45:    return arr_len;
+        -:   46:}
+        -:   47:
+        3:   48:float geometric_mean_of_positive(const float *arr, const int arr_len)
+        -:   49:{
+        3:   50:    float composition = 1.0;
+        3:   51:    int count_positive = 0;
+        -:   52:
+       10:   53:    for (int i = 0; i < arr_len; ++i)
+        -:   54:    {
+        7:   55:        if (arr[i] > 0.0)
+        -:   56:        {
+        5:   57:            composition *= arr[i];
+        5:   58:            ++count_positive;
+        -:   59:        }
+        -:   60:    }
+        -:   61:
+        3:   62:    if (0 == count_positive)
+        1:   63:        return NO_POSITIVE_ELEM;
+        -:   64:
+        2:   65:    return powf(composition, 1.0 / count_positive);
+        -:   66:}
+        -:   67:
+        9:   68:int main(void)
+        -:   69:{
+        -:   70:    float arr[MAX_ARRAY_LEN], arr_len;
+        -:   71:    
+        9:   72:    int input_array_res = input_array(arr);
+        -:   73:    
+        9:   74:    switch (input_array_res)
+        -:   75:    {
+        3:   76:        case INCORRECT_DATA:
+        3:   77:            printf("Incorrect data\n");
+        3:   78:            return INCORRECT_DATA_ERROR;
+        2:   79:        case INCORRECT_ARRAY_LEN:
+        2:   80:            printf("Incorrect array len\n");
+        2:   81:            return INCORRECT_ARRAY_LEN_ERROR;
+        1:   82:        case NOT_ENOUGH_ELEM:
+        1:   83:            printf("Not enough elements\n");
+        1:   84:            return NOT_ENOUGH_ELEM_ERROR;
+        3:   85:        default:
+        3:   86:            arr_len = input_array_res;
+        3:   87:            break;
+        -:   88:    }
+        -:   89:    
+        3:   90:    float geomitric_mean_res = geometric_mean_of_positive(arr, arr_len);
+        3:   91:    if (fabs(geomitric_mean_res + 2.0) < REAL_TOL)
+        -:   92:    {
+        1:   93:        printf("No positive elem\n");
+        1:   94:        return NO_POSITIVE_ELEM_ERROR;
+        -:   95:    }
+        -:   96:
+        2:   97:    float geometric_mean = geomitric_mean_res;
+        -:   98:
+        2:   99:    printf("%.5f\n", geometric_mean);
+        -:  100:
+        2:  101:    return OKAY;
+        -:  102:}

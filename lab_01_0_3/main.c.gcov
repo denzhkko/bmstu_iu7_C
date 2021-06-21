@@ -1,0 +1,24 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:1
+        -:    1:#include <stdio.h>
+        -:    2:
+        -:    3:#define NORMAL_WEIGHT_INDEX 240.0
+        -:    4:#define CM_IN_M 100.0
+        -:    5:
+        -:    6:#define OKAY 0
+        -:    7:
+        -:    8:
+        1:    9:int main(void)
+        -:   10:{
+        -:   11:    float h, t, m, nw, im;
+        1:   12:    printf("Enter height, chest circumference, mass: ");
+        1:   13:    scanf("%f%f%f", &h, &t, &m);
+        -:   14:
+        1:   15:    nw = h * t / NORMAL_WEIGHT_INDEX;
+        1:   16:    im = CM_IN_M * CM_IN_M * m / (h * h);
+        -:   17:
+        1:   18:    printf("Normal weight, index of mass: %.5f %.5f\n", nw, im);
+        1:   19:    return OKAY;
+        -:   20:}

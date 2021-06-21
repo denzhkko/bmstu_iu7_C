@@ -1,0 +1,28 @@
+Input:
+10 15
+Output:
+GCD = 5
+
+
+Input:
+15 15
+Output:
+GCD = 15
+
+
+Input:
+5 0
+Output:
+Incorrect data
+
+
+Input
+10.0 15
+Output:
+Input error
+
+
+Input:
+-10 15
+Output:
+Incorrect data

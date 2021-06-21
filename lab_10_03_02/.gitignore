@@ -1,0 +1,5 @@
+**/out/**
+
+**/gcov/**
+
+!func_tests/test.sh

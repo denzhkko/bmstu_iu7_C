@@ -1,0 +1,83 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:6
+        -:    1:#include <stdio.h>
+        -:    2:
+        -:    3:#include "funcs.h"
+        -:    4:
+        -:    5:#define INCORRECT_START_MES "Please enter: ./main.exe <file-name>\n"
+        -:    6:#define FILE_CANNOT_BE_OPENED_MES "File cannot be opened\n"
+        -:    7:#define INCORRECT_SYMBOL_MES "Incorrect symbol\n"
+        -:    8:#define NOT_ENOUGH_NUM_MES "Not enough numbers\n"
+        -:    9:#define UNKNOWN_ERROR_MES "Unknown error\n"
+        -:   10:
+        -:   11:#define INCORRECT_START_ERROR 1
+        -:   12:#define FILE_CANNOT_BE_OPENED_ERROR 2
+        -:   13:#define INCORRECT_SYMBOL_ERROR 3
+        -:   14:#define NOT_ENOUGH_NUM_ERROR 4
+        -:   15:#define UNKNOWN_ERROR 127
+        -:   16:
+        2:   17:int process_exit_code(const int exit_code)
+        -:   18:{
+        2:   19:    switch (exit_code)
+        -:   20:    {
+    #####:   21:        case OKAY:
+    #####:   22:            return OKAY;
+        1:   23:        case INCORRECT_SYMBOL:
+        1:   24:            printf(INCORRECT_SYMBOL_MES);
+        1:   25:            return INCORRECT_SYMBOL_ERROR;
+        1:   26:        case NOT_ENOUGH_NUM:
+        1:   27:            printf(NOT_ENOUGH_NUM_MES);
+        1:   28:            return NOT_ENOUGH_NUM_ERROR;
+    #####:   29:        default:
+    #####:   30:            printf(UNKNOWN_ERROR_MES);
+    #####:   31:            return UNKNOWN_ERROR;
+        -:   32:    }
+        -:   33:}
+        -:   34:
+        6:   35:int main(int argc, char *argv[])
+        -:   36:{
+        6:   37:    int grc = UNKNOWN_ERROR, rc;
+        -:   38:
+        6:   39:    if (2 == argc)
+        -:   40:    {
+        5:   41:        FILE *f = fopen(argv[1], "r");
+        -:   42:
+        5:   43:        if (f)
+        -:   44:        {
+        -:   45:            float avg;
+        4:   46:            rc = find_avg_value(f, &avg);
+        -:   47:
+        4:   48:            if (OKAY == rc)
+        -:   49:            {
+        -:   50:                float similar;
+        2:   51:                rc = find_similar(f, avg, &similar);
+        -:   52:
+        2:   53:                if (OKAY == rc)
+        -:   54:                {
+        2:   55:                    printf("%.5f\n", similar);
+        2:   56:                    grc = OKAY;
+        -:   57:                }
+        -:   58:                else
+    #####:   59:                    grc = process_exit_code(rc);
+        -:   60:            }
+        -:   61:            else
+        2:   62:                grc = process_exit_code(rc);
+        -:   63:
+        4:   64:            fclose(f);
+        -:   65:        }
+        -:   66:        else
+        -:   67:        {
+        1:   68:            printf(FILE_CANNOT_BE_OPENED_MES);
+        1:   69:            grc = FILE_CANNOT_BE_OPENED_ERROR;
+        -:   70:        }
+        -:   71:    }
+        -:   72:    else
+        -:   73:    {
+        1:   74:        printf(INCORRECT_START_MES);
+        1:   75:        grc = INCORRECT_START_ERROR;
+        -:   76:    }
+        -:   77:
+        6:   78:    return grc;
+        -:   79:}

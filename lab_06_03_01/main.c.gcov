@@ -1,0 +1,143 @@
+        -:    0:Source:../main.c
+        -:    0:Graph:./main.gcno
+        -:    0:Data:./main.gcda
+        -:    0:Runs:23
+        -:    1:#include <stdio.h>
+        -:    2:#include <string.h>
+        -:    3:
+        -:    4:#include "funcs.h"
+        -:    5:
+        -:    6:#define MAX_FILENAME_LEN 30
+        -:    7:
+        -:    8:#define MAX_FILENAME_LEN_EXCEEDED 123
+        -:    9:
+        -:   10:#define ERR_OKAY                            0
+        -:   11:#define ERR_INCORRECT_ARGS                  1
+        -:   12:#define ERR_NONEXITSTENT_FILE               2
+        -:   13:#define ERR_NOT_POSIVITE_ARG_PRICE          3
+        -:   14:#define ERR_EMPTY_FILE                      4
+        -:   15:#define ERR_LINE_COUNT_EXCEEDED             5
+        -:   16:#define ERR_MORE_LINES_EXPECTED             6
+        -:   17:#define ERR_LESS_LINES_EXPECTED             7
+        -:   18:#define ERR_PRODUCT_NAME_LENGTH_EXCEEDED    8
+        -:   19:#define ERR_NEGATIVE_PRODUCT_PRICE          9
+        -:   20:#define ERR_INCORRECT_LINE                  11
+        -:   21:#define ERR_TARGET_PRODUCT_NOT_EXIST        12
+        -:   22:#define ERR_INCORRECT_TITLE_NUM             14
+        -:   23:#define ERR_NOT_NUMBER_IN_ARGS              15
+        -:   24:#define ERR_NOT_FIRST_LINE_NUM              16
+        -:   25:#define ERR_UNEXPECTED_EOF                  17
+        -:   26:#define ERR_INCORRECT_TITLE_NUM_ENTRY       18
+        -:   27:#define ERR_INCORRECT_PRODUCT_PRICE_ENTRY   19
+        -:   28:#define ERR_MAX_FILENAME_LEN_EXCEEDED       123
+        -:   29:#define ERR_FCLOSE_FAILED                   124
+        -:   30:#define ERR_FSEEK_FAILED                    125
+        -:   31:#define ERR_UNKNOWN_ERROR                   127
+        -:   32:
+        -:   33:#define ARGS_NUM 3
+        -:   34:#define ARG_NUM_IMPUT_RC 1
+        -:   35:
+       23:   36:int process_exit_code(const int exit_code)
+        -:   37:{
+       23:   38:    switch (exit_code)
+        -:   39:    {
+        6:   40:        case OKAY:
+        6:   41:            return ERR_OKAY;
+        1:   42:        case INCORRECT_ARGS:
+        1:   43:            return ERR_INCORRECT_ARGS;
+        1:   44:        case NONEXITSTENT_FILE:
+        1:   45:            return ERR_NONEXITSTENT_FILE;
+        1:   46:        case NOT_POSIVITE_ARG_PRICE:
+        1:   47:            return ERR_NOT_POSIVITE_ARG_PRICE;
+        1:   48:        case EMPTY_FILE:
+        1:   49:            return ERR_EMPTY_FILE;
+        1:   50:        case LINE_COUNT_EXCEEDED:
+        1:   51:            return LINE_COUNT_EXCEEDED;
+        1:   52:        case MORE_LINES_EXPECTED:
+        1:   53:            return MORE_LINES_EXPECTED;
+        1:   54:        case LESS_LINES_EXPECTED:
+        1:   55:            return ERR_LESS_LINES_EXPECTED;
+        1:   56:        case PRODUCT_NAME_LENGTH_EXCEEDED:
+        1:   57:            return ERR_PRODUCT_NAME_LENGTH_EXCEEDED;
+        1:   58:        case NEGATIVE_PRODUCT_PRICE:
+        1:   59:            return ERR_NEGATIVE_PRODUCT_PRICE;
+        1:   60:        case INCORRECT_LINE:
+        1:   61:            return ERR_INCORRECT_LINE;
+        1:   62:        case TARGET_PRODUCT_NOT_EXIST:
+        1:   63:            return ERR_OKAY; // ERR_TARGET_PRODUCT_NOT_EXIST;
+        1:   64:        case INCORRECT_TITLE_NUM:
+        1:   65:            return ERR_INCORRECT_TITLE_NUM;
+        1:   66:        case NOT_NUMBER_IN_ARGS:
+        1:   67:            return ERR_NOT_NUMBER_IN_ARGS;
+        1:   68:        case NOT_FIRST_LINE_NUM:
+        1:   69:            return ERR_NOT_FIRST_LINE_NUM;
+        1:   70:        case UNEXPECTED_EOF:
+        1:   71:            return ERR_UNEXPECTED_EOF;
+        1:   72:        case INCORRECT_TITLE_NUM_ENTRY:
+        1:   73:            return ERR_INCORRECT_TITLE_NUM_ENTRY;
+        1:   74:        case ERR_INCORRECT_PRODUCT_PRICE_ENTRY:
+        1:   75:            return ERR_INCORRECT_PRODUCT_PRICE_ENTRY;
+    #####:   76:        case MAX_FILENAME_LEN_EXCEEDED:
+    #####:   77:            return ERR_MAX_FILENAME_LEN_EXCEEDED;
+    #####:   78:        case FCLOSE_FAILED:
+    #####:   79:            return ERR_FCLOSE_FAILED;
+    #####:   80:        case FSEEK_FAILED:
+    #####:   81:            return ERR_FSEEK_FAILED;
+    #####:   82:        default:
+    #####:   83:            return ERR_UNKNOWN_ERROR;
+        -:   84:    }
+        -:   85:}
+        -:   86:
+       23:   87:int parse_args(const int argc, const char **argv, char *filename,
+        -:   88:double *entered_price)
+        -:   89:{
+        -:   90:    int rc;
+        -:   91:
+       23:   92:    if (ARGS_NUM != argc)
+        1:   93:        return INCORRECT_ARGS;
+        -:   94:
+        -:   95:    double temp_entered_price;
+       22:   96:    if (ARG_NUM_IMPUT_RC != (rc = sscanf(argv[2], "%lf", &temp_entered_price)))
+        1:   97:        return NOT_NUMBER_IN_ARGS;
+        -:   98:
+       21:   99:    if (temp_entered_price <= 0)
+        1:  100:        return NOT_POSIVITE_ARG_PRICE;
+        -:  101:
+       20:  102:    if (strlen(argv[1]) > MAX_FILENAME_LEN)
+    #####:  103:        return MAX_FILENAME_LEN_EXCEEDED;
+        -:  104:
+       20:  105:    strncpy(filename, argv[1], MAX_FILENAME_LEN + 1);
+        -:  106:    
+       20:  107:    *entered_price = temp_entered_price;
+        -:  108:
+       20:  109:    return OKAY;
+        -:  110:}
+        -:  111:
+       23:  112:int main(const int argc, const char **argv)
+        -:  113:{
+        -:  114:    int rc;
+        -:  115:    char filename[MAX_FILENAME_LEN + 1];
+        -:  116:    double entered_price;
+        -:  117:
+       23:  118:    if (OKAY != (rc = parse_args(argc, argv, filename, &entered_price)))
+        3:  119:        return process_exit_code(rc);
+        -:  120:    
+        -:  121:    FILE *f;
+       20:  122:    if (!(f = fopen(filename, "r")))
+        1:  123:        return process_exit_code(NONEXITSTENT_FILE);
+        -:  124:
+        -:  125:    int product_count;
+        -:  126:    s_product products[MAX_PRODUCT_COUNT];
+       19:  127:    rc = get_product_array(f, products, &product_count);
+        -:  128:
+       19:  129:    if (EOF == fclose(f))
+    #####:  130:        return process_exit_code(FCLOSE_FAILED);
+        -:  131:
+       19:  132:    if (OKAY != rc)
+       12:  133:        return process_exit_code(rc);
+        -:  134:
+        7:  135:    if (OKAY != (rc = print_required(products, product_count, entered_price)))
+        1:  136:        return process_exit_code(rc);
+        -:  137:
+        6:  138:    return process_exit_code(OKAY);
+        -:  139:}

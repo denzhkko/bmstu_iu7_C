@@ -1,0 +1,1 @@
+a neg_05_f.txt neg_05_s.txt ./res/neg_05_out.txt

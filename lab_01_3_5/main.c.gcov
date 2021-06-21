@@ -1,0 +1,58 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:5
+        -:    1:#include <stdio.h>
+        -:    2:
+        -:    3:#define INPUT_VAR_NUM 2
+        -:    4:
+        -:    5:#define INCORRECT_DATA -2
+        -:    6:
+        -:    7:#define OKAY 0
+        -:    8:#define INPUT_ERROR 1
+        -:    9:#define INCORRECT_DATA_ERROR 2
+        -:   10:
+        -:   11:
+        4:   12:int gcd(int a, int b)
+        -:   13:{
+        4:   14:    if (a <= 0 || b <= 0)
+        2:   15:        return INCORRECT_DATA;
+        -:   16:
+        5:   17:    while (a != 0 && b != 0)
+        -:   18:    {
+        3:   19:        if (a > b)
+        1:   20:            a %= b;
+        -:   21:        else
+        2:   22:            b %= a;
+        -:   23:    }
+        -:   24:
+        2:   25:    return a + b;
+        -:   26:}
+        -:   27:
+        -:   28:
+        5:   29:int main(void)
+        -:   30:{
+        -:   31:    int a, b, rc;
+        -:   32:    int gcd_res;
+        -:   33:
+        5:   34:    printf("Enter two integers: ");
+        5:   35:    rc = scanf("%d%d", &a, &b);
+        -:   36:
+        5:   37:    if (INPUT_VAR_NUM == rc)
+        -:   38:    {
+        4:   39:        gcd_res = gcd(a, b);
+        -:   40:
+        4:   41:        if (INCORRECT_DATA == gcd_res)
+        -:   42:        {
+        2:   43:            printf("Incorrect data\n");
+        2:   44:            return INCORRECT_DATA_ERROR;
+        -:   45:        }
+        2:   46:        printf("GCD = %d\n", gcd_res);
+        2:   47:        return OKAY;
+        -:   48:    }
+        -:   49:    else
+        -:   50:    {
+        1:   51:        printf("Input error\n");
+        1:   52:        return INPUT_ERROR;
+        -:   53:    }
+        -:   54:}

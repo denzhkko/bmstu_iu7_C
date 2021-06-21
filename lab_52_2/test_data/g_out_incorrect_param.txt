@@ -1,0 +1,5 @@
+Enter: ./main.exe <command> <files>
+Available commands:
+sb - sort by price, quantity    : ./main.exe sb file_in file_out
+fb - find by substr at name end : ./main.exe fb file_in substr
+ab - append item to sorted file : ./main.exe ab file_in_out

@@ -1,0 +1,14 @@
+# Generation big files for test
+func_tests/gen_test_file.py
+
+# Func test script
+!func_tests/test.sh
+
+# Out of func testing
+func_tests/res/
+
+# Object and dependence files
+out/
+
+# Asciiname casts
+*.cast

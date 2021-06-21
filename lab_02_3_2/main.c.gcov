@@ -1,0 +1,176 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:9
+        -:    1:#include <stdio.h>
+        -:    2:
+        -:    3:#define MIN_ARRAY_LEN 1
+        -:    4:#define MAX_ARRAY_LEN 10
+        -:    5:
+        -:    6:#define TRUE 1
+        -:    7:#define FALSE 0
+        -:    8:
+        -:    9:// fun input_array
+        -:   10:#define INCORRECT_DATA -1
+        -:   11:#define INCORRECT_INPUT_ARRAY_LEN -2
+        -:   12:#define NOT_ENOUGH_ELEM -3
+        -:   13:
+        -:   14:// fun int_power
+        -:   15:#define NEGATIVE_POWER -1
+        -:   16:
+        -:   17:// fun make_armstrong_array
+        -:   18:#define NO_ARMSTRONG_NUM -1
+        -:   19:
+        -:   20:// fun print_array
+        -:   21:#define INCORRECT_OUTPUT_ARRAY_LEN 1
+        -:   22:
+        -:   23:// fun main
+        -:   24:#define OKAY 0
+        -:   25:#define INCORRECT_DATA_ERROR 1
+        -:   26:#define INCORRECT_INPUT_ARRAY_LEN_ERROR 2
+        -:   27:#define NOT_ENOUGH_ELEM_ERROR 3
+        -:   28:#define NO_ARMSTRONG_NUM_ERROR 4
+        -:   29:#define INCORRECT_OUTPUT_ARRAY_LEN_ERROR 5
+        -:   30:
+        9:   31:int input_array(int *arr)
+        -:   32:{
+        -:   33:    int arr_len;
+        9:   34:    int rc = scanf("%d", &arr_len);
+        -:   35:
+        9:   36:    if (1 != rc)
+        1:   37:        return INCORRECT_DATA;
+        -:   38:
+        8:   39:    if (arr_len < MIN_ARRAY_LEN || arr_len > MAX_ARRAY_LEN)
+        2:   40:        return INCORRECT_INPUT_ARRAY_LEN;
+        -:   41:
+       17:   42:    for (int i = 0; i < arr_len; ++i)
+        -:   43:    {
+       14:   44:        rc = scanf("%d", &arr[i]);
+       14:   45:        if (rc != 1)
+        -:   46:        {
+        -:   47:            char c;
+        3:   48:            rc = scanf("%c", &c);
+        3:   49:            if (1 == rc && c != ' ' && c != '\n')
+        2:   50:                return INCORRECT_DATA;
+        -:   51:
+        1:   52:            return NOT_ENOUGH_ELEM;
+        -:   53:        }
+        -:   54:    }
+        -:   55:
+        3:   56:    return arr_len;
+        -:   57:}
+        -:   58:
+       13:   59:int int_power(const int a, const int n)
+        -:   60:{
+       13:   61:    if (n < 0)
+    #####:   62:        return NEGATIVE_POWER;
+        -:   63:    
+       13:   64:    int res = 1;
+        -:   65:
+       38:   66:    for (int i = 0; i < n; ++i)
+       25:   67:        res *= a;
+        -:   68:
+       13:   69:    return res;
+        -:   70:}
+        -:   71:
+        8:   72:int is_armstrong_num(const int num)
+        -:   73:{
+        8:   74:    if (num <= 0)
+    #####:   75:        return FALSE;
+        -:   76:
+        8:   77:    int copy_num = num;
+        8:   78:    int num_len = 0;
+        -:   79:
+       21:   80:    while (copy_num)
+        -:   81:    {
+       13:   82:        ++num_len;
+       13:   83:        copy_num /=10;
+        -:   84:    }
+        -:   85:
+        8:   86:    int sum_cubes = 0;
+        8:   87:    copy_num = num;
+        -:   88:
+       21:   89:    while (copy_num)
+        -:   90:    {
+       13:   91:        int digit = copy_num % 10;
+       13:   92:        sum_cubes += int_power(digit, num_len);
+       13:   93:        copy_num /=10;
+        -:   94:    }
+        -:   95:
+        8:   96:    if (num == sum_cubes)
+        5:   97:        return TRUE;
+        3:   98:    return FALSE;
+        -:   99:}
+        -:  100:
+        3:  101:int make_armstrong_array(const int *original_arr, const int original_arr_len,
+        -:  102:int *armstrong_arr)
+        -:  103:{
+        3:  104:    int armstrong_arr_len = 0;
+        -:  105:
+       11:  106:    for (int i = 0; i < original_arr_len; ++i)
+        8:  107:        if (is_armstrong_num(original_arr[i]))
+        -:  108:        {
+        5:  109:            armstrong_arr[armstrong_arr_len] = original_arr[i];
+        5:  110:            ++armstrong_arr_len;
+        -:  111:        }
+        -:  112:
+        3:  113:    if (0 == armstrong_arr_len)
+        1:  114:        return NO_ARMSTRONG_NUM;
+        -:  115:
+        2:  116:    return armstrong_arr_len;
+        -:  117:}
+        -:  118:
+        2:  119:int print_array(const int *arr, const int arr_len)
+        -:  120:{
+        2:  121:    if (arr_len < 0)
+    #####:  122:        return INCORRECT_OUTPUT_ARRAY_LEN;
+        -:  123:
+        7:  124:    for (int i = 0; i < arr_len; ++i)
+        5:  125:        printf("%d ", arr[i]);
+        -:  126:
+        2:  127:    return OKAY;
+        -:  128:}
+        -:  129:
+        9:  130:int main(void)
+        -:  131:{
+        -:  132:    int original_arr[MAX_ARRAY_LEN], original_arr_len;
+        -:  133:
+        9:  134:    int input_array_res = input_array(original_arr);
+        -:  135:
+        9:  136:    switch (input_array_res)
+        -:  137:    {
+        3:  138:        case INCORRECT_DATA:
+        3:  139:            printf("Incorrect data\n");
+        3:  140:            return INCORRECT_DATA_ERROR;
+        2:  141:        case INCORRECT_INPUT_ARRAY_LEN:
+        2:  142:            printf("Incorrect array len\n");
+        2:  143:            return INCORRECT_INPUT_ARRAY_LEN_ERROR;
+        1:  144:        case NOT_ENOUGH_ELEM:
+        1:  145:            printf("Not enough elements\n");
+        1:  146:            return NOT_ENOUGH_ELEM_ERROR;
+        3:  147:        default:
+        3:  148:            original_arr_len = input_array_res;
+        3:  149:            break;
+        -:  150:    }
+        -:  151:
+        -:  152:    int armstrong_arr[MAX_ARRAY_LEN];
+        3:  153:    int make_armstrong_array_res = make_armstrong_array(original_arr,
+        -:  154:    original_arr_len, armstrong_arr);
+        -:  155:
+        3:  156:    if (NO_ARMSTRONG_NUM == make_armstrong_array_res)
+        -:  157:    {
+        1:  158:        printf("No armstrong numbers in origin array\n");
+        1:  159:        return NO_ARMSTRONG_NUM_ERROR;
+        -:  160:    }
+        2:  161:    int armstrong_arr_len = make_armstrong_array_res;
+        -:  162:
+        2:  163:    int print_array_res = print_array(armstrong_arr, armstrong_arr_len);
+        -:  164:
+        2:  165:    if (INCORRECT_OUTPUT_ARRAY_LEN == print_array_res)
+        -:  166:    {
+    #####:  167:        printf("Incorrect output array len\n");
+    #####:  168:        return INCORRECT_OUTPUT_ARRAY_LEN_ERROR;
+        -:  169:    }
+        -:  170:
+        2:  171:    return OKAY;
+        -:  172:}

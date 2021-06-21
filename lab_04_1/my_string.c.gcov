@@ -1,0 +1,16 @@
+        -:    0:Source:my_string.c
+        -:    0:Graph:my_string.gcno
+        -:    0:Data:my_string.gcda
+        -:    0:Runs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include "my_string.h"
+        -:    3:
+        4:    4:char *my_strpbrk(const char *s, const char *accept)
+        -:    5:{
+       28:    6:    for (char *ps = (char *) s; *ps; ++ps)
+       63:    7:        for (char *pa = (char *) accept; *pa; ++pa)
+       39:    8:            if (*ps == *pa)
+        2:    9:                return ps;
+        -:   10:
+        2:   11:    return NULL;
+        -:   12:}

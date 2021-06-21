@@ -1,0 +1,112 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:8
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:
+        -:    4:#define MIN_ARRAY_LEN 1
+        -:    5:#define MAX_ARRAY_LEN 10
+        -:    6:
+        -:    7:// fun input_array
+        -:    8:#define INCORRECT_DATA -1
+        -:    9:#define INCORRECT_INPUT_ARRAY_LEN -2
+        -:   10:#define NOT_ENOUGH_ELEM -3
+        -:   11:
+        -:   12:// fun print_array
+        -:   13:#define INCORRECT_OUTPUT_ARRAY_LEN 1
+        -:   14:
+        -:   15:// fun main
+        -:   16:#define OKAY 0
+        -:   17:#define INCORRECT_DATA_ERROR 1
+        -:   18:#define INCORRECT_INPUT_ARRAY_LEN_ERROR 2
+        -:   19:#define NOT_ENOUGH_ELEM_ERROR 3
+        -:   20:
+        -:   21:
+        -:   22:#define INCORRECT_OUTPUT_ARRAY_LEN_ERROR 5
+        -:   23:
+        8:   24:int input_array(float *arr)
+        -:   25:{
+        -:   26:    int arr_len;
+        8:   27:    int rc = scanf("%d", &arr_len);
+        -:   28:
+        8:   29:    if (1 != rc)
+        1:   30:        return INCORRECT_DATA;
+        -:   31:
+        7:   32:    if (arr_len < MIN_ARRAY_LEN || arr_len > MAX_ARRAY_LEN)
+        2:   33:        return INCORRECT_INPUT_ARRAY_LEN;
+        -:   34:
+       16:   35:    for (int i = 0; i < arr_len; ++i)
+        -:   36:    {
+       14:   37:        rc = scanf("%f", &arr[i]);
+       14:   38:        if (rc != 1)
+        -:   39:        {
+        -:   40:            char c;
+        3:   41:            rc = scanf("%c", &c);
+        3:   42:            if (1 == rc && c != ' ' && c != '\n')
+        2:   43:                return INCORRECT_DATA;
+        -:   44:
+        1:   45:            return NOT_ENOUGH_ELEM;
+        -:   46:        }
+        -:   47:    }
+        -:   48:
+        2:   49:    return arr_len;
+        -:   50:}
+        -:   51:
+        2:   52:void bubble_sort(float *arr, const int arr_len)
+        -:   53:{
+        8:   54:    for (int i = arr_len - 1; i > 0; --i)
+       18:   55:        for (int j = 0; j < i; ++j)
+       12:   56:            if (arr[j] > arr[j + 1])
+        -:   57:            {
+        7:   58:                float k = arr[j];
+        7:   59:                arr[j] = arr[j + 1];
+        7:   60:                arr[j + 1] = k;
+        -:   61:            }
+        2:   62:}
+        -:   63:
+        2:   64:int print_array(const float *arr, const int arr_len)
+        -:   65:{
+        2:   66:    if (arr_len < 0)
+    #####:   67:        return INCORRECT_OUTPUT_ARRAY_LEN;
+        -:   68:
+       10:   69:    for (int i = 0; i < arr_len; ++i)
+        8:   70:        printf("%.5f ", arr[i]);
+        -:   71:
+        2:   72:    return OKAY;
+        -:   73:}
+        -:   74:
+        8:   75:int main(void)
+        -:   76:{
+        -:   77:    float arr[2 * MAX_ARRAY_LEN], arr_len;
+        -:   78:
+        8:   79:    int input_array_res = input_array(arr);
+        -:   80:
+        8:   81:    switch (input_array_res)
+        -:   82:    {
+        3:   83:        case INCORRECT_DATA:
+        3:   84:            printf("Incorrect data\n");
+        3:   85:            return INCORRECT_DATA_ERROR;
+        2:   86:        case INCORRECT_INPUT_ARRAY_LEN:
+        2:   87:            printf("Incorrect array len\n");
+        2:   88:            return INCORRECT_INPUT_ARRAY_LEN_ERROR;
+        1:   89:        case NOT_ENOUGH_ELEM:
+        1:   90:            printf("Not enough elements\n");
+        1:   91:            return NOT_ENOUGH_ELEM_ERROR;
+        2:   92:        default:
+        2:   93:            arr_len = input_array_res;
+        2:   94:            break;
+        -:   95:    }
+        -:   96:
+        2:   97:    bubble_sort(arr, arr_len);
+        -:   98:
+        2:   99:    int print_array_res = print_array(arr, arr_len);
+        -:  100:
+        2:  101:    if (INCORRECT_OUTPUT_ARRAY_LEN == print_array_res)
+        -:  102:    {
+    #####:  103:        printf("Incorrect output array len\n");
+    #####:  104:        return INCORRECT_OUTPUT_ARRAY_LEN_ERROR;
+        -:  105:    }
+        -:  106:
+        2:  107:    return OKAY;
+        -:  108:}

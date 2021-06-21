@@ -1,0 +1,192 @@
+        -:    0:Source:funcs.c
+        -:    0:Graph:./funcs.gcno
+        -:    0:Data:./funcs.gcda
+        -:    0:Runs:4
+        -:    1:#include "funcs.h"
+        -:    2:
+    #####:    3:int fill_file(FILE *f, const size_t num_count)
+        -:    4:{
+    #####:    5:    assert(NULL != f);
+        -:    6:    assert(num_count >= 0);
+        -:    7:
+    #####:    8:    srand(time(NULL));
+        -:    9:
+        -:   10:    int32_t num;
+    #####:   11:    int num_size = sizeof(num);
+        -:   12:
+    #####:   13:    for (size_t i = 0; i < num_count; ++i)
+        -:   14:    {
+    #####:   15:        num = rand() - rand();
+        -:   16:
+    #####:   17:        if (1 != fwrite(&num, num_size, 1, f))
+    #####:   18:            return FWRITE_FAILED;
+        -:   19:    }
+        -:   20:
+    #####:   21:    return OKAY;
+        -:   22:}
+        -:   23:
+        4:   24:int get_file_size(FILE *f, size_t *const size)
+        -:   25:{
+       4*:   26:    assert(NULL != f);
+        -:   27:
+        4:   28:    if (fseek(f, 0L, SEEK_END))
+    #####:   29:        return FSEEK_FAILED;
+        -:   30:
+        4:   31:    size_t sz = ftell(f);    
+        -:   32:    if (sz < 0)
+        -:   33:        return FTELL_FAILED;
+        -:   34:
+        4:   35:    *size = sz;
+        -:   36:    
+        4:   37:    if (fseek(f, 0L, SEEK_SET))
+    #####:   38:        return FSEEK_FAILED;
+        -:   39:
+        4:   40:    return OKAY;
+        -:   41:}
+        -:   42:
+        3:   43:int print_file(FILE *f)
+        -:   44:{
+       3*:   45:    assert(NULL != f);
+        -:   46:
+        -:   47:    int rc;
+        -:   48:    int32_t num;
+        3:   49:    int num_size = sizeof(num);
+        -:   50:
+        -:   51:    size_t file_size;
+        -:   52:
+        3:   53:    rc = get_file_size(f, &file_size);
+        -:   54:
+        3:   55:    if (OKAY == rc)
+        -:   56:    {
+        3:   57:        if (0 == file_size)
+        1:   58:            return EMPTY_FILE;
+        -:   59:
+        2:   60:        if (file_size % num_size)
+    #####:   61:            return INCORRECT_FILE_SIZE;
+        -:   62:
+        2:   63:        size_t num_count = file_size / num_size;
+        -:   64:
+       10:   65:        for (size_t i = 0; i < num_count; ++i)
+        -:   66:        {
+        8:   67:            if (1 != fread(&num, num_size, 1, f))
+    #####:   68:                return FREAD_FAILED;
+        -:   69:
+        8:   70:            printf("%"PRId32" ", num);
+        -:   71:        }
+        2:   72:        printf("\n");
+        2:   73:        return OKAY;
+        -:   74:    }
+        -:   75:    else
+    #####:   76:        return rc;
+        -:   77:}
+        -:   78:
+       16:   79:int32_t get_number_by_pos(FILE *f, const size_t pos)
+        -:   80:{
+      16*:   81:    assert(NULL != f);
+        -:   82:    assert(pos >= 0);
+        -:   83:
+        -:   84:    int rc;
+        -:   85:
+       16:   86:    rc = fseek(f, pos * sizeof(int32_t), SEEK_SET);
+        -:   87:
+      16*:   88:    assert(0 == rc);
+        -:   89:
+        -:   90:    int32_t num;
+        -:   91:    
+       16:   92:    rc = fread(&num, sizeof(num), 1, f);
+        -:   93:
+      16*:   94:    assert(1 == rc);
+        -:   95:
+       16:   96:    return num;
+        -:   97:}
+        -:   98:
+        4:   99:void put_number_by_pos(FILE *f, const size_t pos, const int32_t num)
+        -:  100:{
+       4*:  101:    assert(NULL != f);
+        -:  102:    assert(pos >= 0);
+        -:  103:
+        -:  104:    int rc;
+        -:  105:
+        4:  106:    rc = fseek(f, pos * sizeof(num), SEEK_SET);
+        -:  107:
+       4*:  108:    assert(0 == rc);
+        -:  109:
+        4:  110:    rc = fwrite(&num, sizeof(num), 1, f);
+        -:  111:
+       4*:  112:    assert(1 == rc);
+        4:  113:}
+        -:  114:
+        1:  115:int sort_file(FILE *f)
+        -:  116:{
+       1*:  117:    assert(NULL != f);
+        -:  118:
+        -:  119:    size_t file_size;
+        -:  120:    int rc;
+        -:  121:
+        1:  122:    rc = get_file_size(f, &file_size);
+        -:  123:
+        1:  124:    if (rc == OKAY)
+        -:  125:    {
+        1:  126:        if (0 == file_size)
+    #####:  127:            return EMPTY_FILE;
+        -:  128:
+        1:  129:        if (file_size % sizeof(int32_t))
+    #####:  130:            return INCORRECT_FILE_SIZE;
+        -:  131:
+        1:  132:        size_t num_count = file_size / sizeof(int32_t);
+        -:  133:
+        5:  134:        for (size_t i = num_count; i > 0; --i)
+       10:  135:            for (size_t j = 0; j < i - 1; ++j)
+        6:  136:                if (get_number_by_pos(f, j) > get_number_by_pos(f, j + 1))
+        -:  137:                {
+        2:  138:                    int32_t k = get_number_by_pos(f, j);
+        2:  139:                    put_number_by_pos(f, j, get_number_by_pos(f, j + 1));
+        2:  140:                    put_number_by_pos(f, j + 1, k);
+        -:  141:                }
+        1:  142:        return OKAY;
+        -:  143:    }
+        -:  144:    else
+    #####:  145:        return rc;
+        -:  146:}
+        -:  147:
+        1:  148:int process_exit_code(const int exit_code)
+        -:  149:{
+        1:  150:    switch (exit_code)
+        -:  151:    {
+    #####:  152:        case OKAY:
+    #####:  153:            return OKAY;
+    #####:  154:        case INCORRECT_COMMAND:
+    #####:  155:            fprintf(stderr, INCORRECT_COMMAND_MESS);
+    #####:  156:            return INCORRECT_COMMAND_ERROR;
+    #####:  157:        case INCORRECT_START:
+    #####:  158:            fprintf(stderr, INCORRECT_START_MESS);
+    #####:  159:            return INCORRECT_START_ERROR;
+    #####:  160:        case FILE_CANNOT_BE_OPENED:
+    #####:  161:            perror("");
+    #####:  162:            return FILE_CANNOT_BE_OPENED_ERROR;
+    #####:  163:        case FCLOSE_FAILED:
+    #####:  164:            perror("");
+    #####:  165:            return FCLOSE_FAILED_ERROR;
+    #####:  166:        case FWRITE_FAILED:
+    #####:  167:            perror("fwrite failed");
+    #####:  168:            return FWRITE_FAILED_ERROR;
+    #####:  169:        case FSEEK_FAILED:
+    #####:  170:            fprintf(stderr, FSEEK_FAILED_MESS);
+    #####:  171:            return FSEEK_FAILED_ERROR;
+    #####:  172:        case FTELL_FAILED:
+    #####:  173:            fprintf(stderr, FTELL_FAILED_MESS);
+    #####:  174:            return FTELL_FAILED_ERROR;
+    #####:  175:        case FREAD_FAILED:
+    #####:  176:            fprintf(stderr, FREAD_FAILED_MESS);
+    #####:  177:            return FREAD_FAILED_ERROR;
+        1:  178:        case EMPTY_FILE:
+        1:  179:            fprintf(stderr, EMPTY_FILE_MESS);
+        1:  180:            return EMPTY_FILE_ERROR;
+    #####:  181:        case INCORRECT_FILE_SIZE:
+    #####:  182:            fprintf(stderr, INCORRECT_FILE_SIZE_MESS);
+    #####:  183:            return INCORRECT_FILE_SIZE_ERROR;
+    #####:  184:        default:
+    #####:  185:            fprintf(stderr, UNKNOWN_EXIT_CODE_MESS);
+    #####:  186:            return UNKNOWN_EXIT_CODE_ERROR;
+        -:  187:    }
+        -:  188:}

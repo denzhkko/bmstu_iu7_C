@@ -1,0 +1,41 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:7
+        -:    1:#include <stdio.h>
+        -:    2:
+        -:    3:#include "lab_func.h"
+        -:    4:
+        -:    5:#define INCORRECT_INPUT_ERROR 1
+        -:    6:#define INCORRECT_WORD_LEN_ERROR 2
+        -:    7:
+        7:    8:int main(void)
+        -:    9:{
+        -:   10:    int exit_code;
+        -:   11:
+        -:   12:    char str[MAX_STR_LEN + 1];
+        -:   13:
+        7:   14:    if (NULL == fgets(str, sizeof(str), stdin))
+        1:   15:        if (OKAY != (exit_code = error_processing(INCORRECT_INPUT_ERROR)))
+        1:   16:            return exit_code; 
+        -:   17:
+        -:   18:    int words_count;
+        -:   19:    char words[MAX_WORD_COUNT][MAX_WORD_LEN + 1];
+        -:   20:
+        6:   21:    exit_code = str_split(str, words, &words_count);
+        6:   22:    if (OKAY != (exit_code = error_processing(exit_code)))
+        1:   23:        return exit_code;
+        -:   24:
+        -:   25:    char req_str[MAX_STR_LEN];
+        5:   26:    exit_code = form_req_str(words, words_count, req_str);
+        5:   27:    if (OKAY != (exit_code = error_processing(exit_code)))
+    #####:   28:        return exit_code;
+        -:   29:
+        -:   30:
+        5:   31:    exit_code = print_res(req_str);
+        5:   32:    if (OKAY != (exit_code = error_processing(exit_code)))
+        2:   33:        return exit_code;
+        -:   34:
+        -:   35:
+        3:   36:    return OKAY;
+        -:   37:}
