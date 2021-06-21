@@ -1,0 +1,43 @@
+# QTcreator files
+
+*.cflags
+*.config
+*.cxxflags
+*.files
+*.includes
+*.creator
+*.creator.user
+
+# Gcov binary files
+
+*.gcno
+*.gcda
+
+# Object files 
+
+*.o
+
+# Dependence files
+
+*.d
+
+# Executable files
+
+*.exe
+
+# VS code
+
+**/.vscode/**
+
+# Gprof
+
+**/make_gprof*
+**/gmon.out
+
+# VIM
+
+*.swp
+
+# Func test files
+
+**/func_tests/res/**
